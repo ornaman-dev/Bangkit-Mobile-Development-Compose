@@ -1,5 +1,6 @@
 package com.example.ornamancompose.ui.component
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,13 +27,17 @@ import com.example.ornamancompose.R
 fun IconCard(
     modifier : Modifier = Modifier,
     icon : Painter,
-    title : String
+    title : String,
+    onClickEvent : () -> Unit = {}
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .padding(10.dp)
             .wrapContentSize()
+            .clickable {
+                onClickEvent()
+            }
     ) {
         Icon(
             painter = icon,
