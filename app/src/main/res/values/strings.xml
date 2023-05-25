@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">OrnamanCompose</string>
+    <string name="home_bottom_nav_menu">Home</string>
+    <string name="scan_bottom_nav_menu">Scan</string>
+    <string name="profile_bottom_nav_menu">Profile</string>
+    <string name="action_upload_from_gallery">Upload from gallery</string>
+    <string name="action_take_a_picture">Take a picture</string>
+</resources>
