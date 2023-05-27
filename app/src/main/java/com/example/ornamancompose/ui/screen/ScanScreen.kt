@@ -1,6 +1,7 @@
 package com.example.ornamancompose.ui.screen
 
 import android.app.Activity.RESULT_OK
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
@@ -27,11 +28,17 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.content.FileProvider
 import com.example.ornamancompose.R
 import com.example.ornamancompose.ui.component.IconCard
+import com.example.ornamancompose.util.createCustomTempFile
+import java.io.File
 import kotlin.contracts.contract
 
 private const val SCANSCREENTAG = "scan_screen_tag"
+
+private lateinit var currentFilePath : String
+private lateinit var uploadedFile : File
 @Composable
 fun ScanScreen(
     modifier : Modifier = Modifier
@@ -55,7 +62,8 @@ fun ScanScreen(
         contract = ActivityResultContracts.StartActivityForResult()
     ){ result ->
         if(result.resultCode == RESULT_OK){
-            bitmap = result.data?.extras?.get("data") as Bitmap
+            uploadedFile = File(currentFilePath)
+            Log.i(SCANSCREENTAG, "File : $uploadedFile")
         }
     }
 
@@ -81,7 +89,19 @@ fun ScanScreen(
         },
         onClickTakePicture = {
             val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            launcherIntentCamera.launch(intent)
+            intent.resolveActivity(context.packageManager)
+
+            createCustomTempFile(context.applicationContext).also {
+                val photoURI : Uri = FileProvider.getUriForFile(
+                    context,
+                    "com.example.ornamancompose",
+                    it
+                )
+                currentFilePath = it.absolutePath
+                Log.i(SCANSCREENTAG, currentFilePath)
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+                launcherIntentCamera.launch(intent)
+            }
         }
     )
 }
@@ -121,6 +141,10 @@ fun Scan(
 
         }
     }
+}
+
+private fun takePhoto(context : Context, launchIntentCamera : (Intent) -> Unit){
+
 }
 
 //@Preview(showBackground = true, showSystemUi = true)
