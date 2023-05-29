@@ -14,10 +14,12 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,33 +31,37 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.ornamancompose.R
+import com.example.ornamancompose.repository.UiState
 import com.example.ornamancompose.ui.component.IconCard
+import com.example.ornamancompose.ui.component.ProgressBar
 import com.example.ornamancompose.util.createCustomTempFile
+import com.example.ornamancompose.util.showToast
+import com.example.ornamancompose.util.uriToFile
+import com.example.ornamancompose.viewmodel.ScanViewModel
+import com.example.ornamancompose.viewmodel.ViewModelFactory
 import java.io.File
-import kotlin.contracts.contract
 
 private const val SCANSCREENTAG = "scan_screen_tag"
 
 private lateinit var currentFilePath : String
-private lateinit var uploadedFile : File
 @Composable
 fun ScanScreen(
     modifier : Modifier = Modifier
 ) {
 
-    var imageUri by remember{
-        mutableStateOf<Uri?>(null)
-    }
-
-    var bitmap by remember{
-        mutableStateOf<Bitmap?>(null)
+    val context = LocalContext.current
+    var uploadedFile by remember{
+        mutableStateOf<File?>(null)
     }
 
     val launcherGallery = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
-    ){result ->
-        imageUri = result
+    ){uri ->
+        if(uri != null){
+            uploadedFile = uriToFile(uri, context)
+        }
     }
 
     val launcherIntentCamera = rememberLauncherForActivityResult(
@@ -67,43 +73,50 @@ fun ScanScreen(
         }
     }
 
-    val context = LocalContext.current
+    val viewModel : ScanViewModel = viewModel(
+        factory = ViewModelFactory.getInstance()
+    )
 
-    imageUri?.let{
-        bitmap = if(Build.VERSION.SDK_INT < 28){
-            MediaStore.Images
-                .Media.getBitmap(context.contentResolver, it)
-        }else{
-            val source = ImageDecoder
-                .createSource(context.contentResolver, it)
-            ImageDecoder.decodeBitmap(source)
-        }
-    }
-
-    Log.i(SCANSCREENTAG, "$bitmap")
-
-    Scan(
+    Box(
         modifier = modifier,
-        onClickUploadGallery = {
-            launcherGallery.launch("image/*")
-        },
-        onClickTakePicture = {
-            val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            intent.resolveActivity(context.packageManager)
-
-            createCustomTempFile(context.applicationContext).also {
-                val photoURI : Uri = FileProvider.getUriForFile(
-                    context,
-                    "com.example.ornamancompose",
-                    it
-                )
-                currentFilePath = it.absolutePath
-                Log.i(SCANSCREENTAG, currentFilePath)
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-                launcherIntentCamera.launch(intent)
+        contentAlignment = Alignment.Center
+    ){
+        if(uploadedFile == null){
+            Scan(
+                onClickUploadGallery = {
+                    launcherGallery.launch("image/*")
+                },
+                onClickTakePicture = {
+                    takePhoto(context){intent ->
+                        launcherIntentCamera.launch(intent)
+                    }
+                }
+            )
+        }else{
+            // Request goes here
+            viewModel.scanPlant(uploadedFile!!).collectAsState(initial = UiState.Loading).value.let{ uiState ->
+                when(uiState){
+                    is UiState.Loading -> {
+                        ProgressBar()
+                    }
+                    is UiState.Exception -> {
+                        showToast(context, uiState.message)
+                    }
+                    is UiState.Error -> {
+                        val message = "${uiState.code} : ${uiState.message}"
+                        showToast(context, message)
+                    }
+                    is UiState.Success -> {
+                        ScanResultScreen(
+                            modifier = Modifier
+                                .fillMaxSize(),
+                            scanResult = uiState.data
+                        )
+                    }
+                }
             }
         }
-    )
+    }
 }
 
 @Composable
@@ -113,38 +126,46 @@ fun Scan(
     onClickTakePicture : () -> Unit
 ) {
     Box(
-        modifier = modifier,
+        modifier = modifier
+            .fillMaxWidth()
+            .wrapContentHeight(),
         contentAlignment = Alignment.Center
-    ){
-        Box(
+    ) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(10.dp),
             modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight(),
-            contentAlignment = Alignment.Center
+                .wrapContentSize(),
         ) {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(10.dp),
-                modifier = Modifier
-                    .wrapContentSize(),
-            ) {
-                IconCard(
-                    icon = painterResource(R.drawable.ic_folde_add),
-                    title = stringResource(R.string.action_upload_from_gallery),
-                    onClickEvent = onClickUploadGallery
-                )
-                IconCard(
-                    icon = painterResource(R.drawable.ic_camera),
-                    title = stringResource(R.string.action_take_a_picture),
-                    onClickEvent = onClickTakePicture
-                )
-            }
-
+            IconCard(
+                icon = painterResource(R.drawable.ic_folde_add),
+                title = stringResource(R.string.action_upload_from_gallery),
+                onClickEvent = onClickUploadGallery
+            )
+            IconCard(
+                icon = painterResource(R.drawable.ic_camera),
+                title = stringResource(R.string.action_take_a_picture),
+                onClickEvent = onClickTakePicture
+            )
         }
+
     }
 }
 
 private fun takePhoto(context : Context, launchIntentCamera : (Intent) -> Unit){
+    val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+    intent.resolveActivity(context.packageManager)
 
+    createCustomTempFile(context.applicationContext).also {
+        val photoURI : Uri = FileProvider.getUriForFile(
+            context,
+            "com.example.ornamancompose",
+            it
+        )
+        currentFilePath = it.absolutePath
+        Log.i(SCANSCREENTAG, currentFilePath)
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+        launchIntentCamera(intent)
+    }
 }
 
 //@Preview(showBackground = true, showSystemUi = true)

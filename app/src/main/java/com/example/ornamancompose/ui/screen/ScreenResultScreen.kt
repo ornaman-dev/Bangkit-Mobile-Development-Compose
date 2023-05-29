@@ -19,16 +19,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.example.compose.OrnamanComposeTheme
 import com.example.ornamancompose.R
+import com.example.ornamancompose.model.remote.PlantScanResponse
 
 @Composable
 fun ScanResultScreen(
     modifier : Modifier = Modifier,
-    imgBitmap : Painter,
-    plantName : String,
-    description : String,
-    confidence : String
+    scanResult : PlantScanResponse
 ) {
     Column(
         modifier = modifier
@@ -38,10 +37,10 @@ fun ScanResultScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight(),
-            imgBitmap = imgBitmap
+            //imgUrl = scanResult.imgUrl
         )
         Text(
-            text = stringResource(R.string.plant_name, plantName),
+            text = stringResource(R.string.plant_name, scanResult.kelas),
             style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier
                 .padding(top = 15.dp)
@@ -49,7 +48,7 @@ fun ScanResultScreen(
             textAlign = TextAlign.Center
         )
         Text(
-            text = stringResource(R.string.confidence_prediction, confidence),
+            text = stringResource(R.string.confidence_prediction, scanResult.confidence),
             style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier
                 .padding(top = 15.dp)
@@ -57,7 +56,7 @@ fun ScanResultScreen(
             textAlign = TextAlign.Center
         )
         Text(
-            text = description,
+            text = scanResult.description,
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier
                 .padding(top = 15.dp)
@@ -71,33 +70,31 @@ fun ScanResultScreen(
 @Composable
 fun CardImage(
     modifier: Modifier = Modifier,
-    imgBitmap: Painter
+    imgUrl : String? = null
 ) {
     ElevatedCard(
         modifier = modifier,
         shape = RoundedCornerShape(5.dp)
     ) {
-        Image(
-            painter = imgBitmap,
+        AsyncImage(
+            model = imgUrl,
             contentDescription = null,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(200.dp),
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.Crop,
+            placeholder = painterResource(R.drawable.plant)
         )
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun CardImagePrev() {
-    OrnamanComposeTheme {
-        ScanResultScreen(
-            imgBitmap = painterResource(id = R.drawable.plant),
-            plantName = "Anggrek",
-            description = "Sample description sample description sample",
-            confidence = "0.99999"
-        )
-    }
-}
+//@Preview(showBackground = true, showSystemUi = true)
+//@Composable
+//fun CardImagePrev() {
+//    OrnamanComposeTheme {
+//        ScanResultScreen(
+//            scanResult = PlantScanResponse("","","")
+//        )
+//    }
+//}
 
