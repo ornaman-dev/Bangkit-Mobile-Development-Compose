@@ -18,10 +18,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.example.compose.OrnamanComposeTheme
 import com.example.ornamancompose.ui.component.BottomNav
+import com.example.ornamancompose.ui.component.InputText
 import com.example.ornamancompose.ui.navigation.Screen
+import com.example.ornamancompose.ui.screen.LoginScreen
+import com.example.ornamancompose.ui.screen.RegisterScreen
 import com.example.ornamancompose.ui.screen.ScanScreen
 
 class MainActivity : ComponentActivity() {
@@ -49,48 +53,85 @@ fun OrnamanApp() {
 
     Scaffold(
         bottomBar = {
-            BottomNav(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight(),
-                selected = {route ->
-                    currentDestinationRoute.value?.destination?.route == route
-                },
-                onItemClick = {route ->
-                    navController.navigate(route)
-                }
-            )
+            if(currentDestinationRoute.value?.destination?.route == "home_screen"){
+                BottomNav(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight(),
+                    selected = {route ->
+                        currentDestinationRoute.value?.destination?.route == route
+                    },
+                    onItemClick = {route ->
+                        navController.navigate(route)
+                    }
+                )
+            }
         }
     ){ innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = Screen.Home.route
+            // Got to check if the user already logged in, by changing the start destination to home_screen if yes and auth_screen otherwise
+            startDestination = "auth_screen"
         ){
-            composable(
-                route = Screen.Home.route
+            navigation(
+                route = "home_screen",
+                startDestination = Screen.Home.route
             ){
-                Text(
-                    modifier = Modifier
-                        .padding(innerPadding),
-                    text = Screen.Home.route
-                )
+                composable(
+                    route = Screen.Home.route
+                ){
+                    Text(
+                        modifier = Modifier
+                            .padding(innerPadding),
+                        text = Screen.Home.route
+                    )
+                }
+                composable(
+                    route = Screen.Scan.route
+                ){
+                    ScanScreen(
+                        modifier = Modifier
+                            .fillMaxSize()
+                    )
+                }
+                composable(
+                    route = Screen.Profile.route
+                ){
+                    Text(
+                        modifier = Modifier
+                            .padding(innerPadding),
+                        text = Screen.Profile.route
+                    )
+                }
             }
-            composable(
-                route = Screen.Scan.route
+            navigation(
+                route = "auth_screen",
+                startDestination = Screen.Login.route
             ){
-                ScanScreen(
-                    modifier = Modifier
-                        .fillMaxSize()
-                )
-            }
-            composable(
-                route = Screen.Profile.route
-            ){
-                Text(
-                    modifier = Modifier
-                        .padding(innerPadding),
-                    text = Screen.Profile.route
-                )
+                composable(route = Screen.Login.route){
+                    LoginScreen(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        onSignUpClick = {
+                            navController.navigate(Screen.Register.route){
+                                launchSingleTop = true
+                            }
+                        }
+                    )
+                }
+                composable(route = Screen.Register.route){
+                    RegisterScreen(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        onSignInClick = {
+                            navController.navigate(Screen.Login.route){
+                                popUpTo(Screen.Login.route){
+                                    inclusive = true
+                                }
+                            }
+                        }
+                    )
+                }
             }
         }
     }

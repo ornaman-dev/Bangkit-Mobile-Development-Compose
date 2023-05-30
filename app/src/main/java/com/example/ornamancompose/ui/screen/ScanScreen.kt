@@ -84,7 +84,7 @@ fun ScanScreen(
         if(uploadedFile == null){
             Scan(
                 onClickUploadGallery = {
-                    launcherGallery.launch("image/*")
+                    launcherGallery.launch("image/jpeg image/png")
                 },
                 onClickTakePicture = {
                     takePhoto(context){intent ->

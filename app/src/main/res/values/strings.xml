@@ -7,4 +7,20 @@
     <string name="action_take_a_picture">Take a picture</string>
     <string name="plant_name">Nama tanaman <b>%s</b></string>
     <string name="confidence_prediction">Confidence : %s</string>
+    <string name="username_placeholder">Username</string>
+    <string name="password_placeholder">Password</string>
+    <string name="name_placeholder">Name</string>
+    <string name="password_error_message">Password must be at least 8 characters</string>
+    <string name="username_error_message">Password must be at least 8 characters</string>
+    <string name="already_have_an_account">Already have an account?</string>
+    <string name="dont_have_an_account">Don\'t have an account yet?</string>
+    <string name="login_greeting">Hello</string>
+    <string name="login_greeting_2">Again!</string>
+    <string name="login_greeting_3">Welcome back you\'ve been missed</string>
+    <string name="sign_in">Sign In</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="join">Join</string>
+    <string name="us">Us!</string>
 </resources>

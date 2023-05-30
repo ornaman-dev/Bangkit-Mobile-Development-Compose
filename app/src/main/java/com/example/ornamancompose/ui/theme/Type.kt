@@ -19,13 +19,45 @@ val Poppins = FontFamily(
 val Typography = Typography(
     bodyLarge = TextStyle(
         fontFamily = Poppins,
-        fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
-        lineHeight = 24.sp,
-        letterSpacing = 0.5.sp
+        fontWeight = FontWeight(400),
+        fontSize = 20.sp,
+        lineHeight = 30.sp,
+        letterSpacing = 0.12.sp
     ),
     bodyMedium = TextStyle(
-        fontFamily = Poppins
+        fontFamily = Poppins,
+        fontWeight = FontWeight(400),
+        fontSize = 16.sp,
+        lineHeight = 24.sp,
+        letterSpacing = 0.12.sp
+    ),
+    bodySmall = TextStyle(
+        fontFamily = Poppins,
+        fontWeight = FontWeight(400),
+        fontSize = 14.sp,
+        lineHeight = 21.sp,
+        letterSpacing = 0.12.sp
+    ),
+    displayLarge = TextStyle(
+        fontFamily = Poppins,
+        fontWeight = FontWeight(400),
+        fontSize = 48.sp,
+        lineHeight = 72.sp,
+        letterSpacing = 0.12.sp
+    ),
+    displayMedium = TextStyle(
+        fontFamily = Poppins,
+        fontWeight = FontWeight(400),
+        fontSize = 32.sp,
+        lineHeight = 48.sp,
+        letterSpacing = 0.12.sp
+    ),
+    displaySmall = TextStyle(
+        fontFamily = Poppins,
+        fontWeight = FontWeight(400),
+        fontSize = 24.sp,
+        lineHeight = 36.sp,
+        letterSpacing = 0.12.sp
     )
     /* Other default text styles to override
     titleLarge = TextStyle(
