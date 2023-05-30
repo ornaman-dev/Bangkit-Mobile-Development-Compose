@@ -47,7 +47,7 @@ fun IconCard(
         )
         Text(
             text = title,
-            style = MaterialTheme.typography.bodyLarge,
+            style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier
                 .padding(start = 10.dp)
         )

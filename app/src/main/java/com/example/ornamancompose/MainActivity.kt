@@ -13,8 +13,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -27,6 +30,8 @@ import com.example.ornamancompose.ui.navigation.Screen
 import com.example.ornamancompose.ui.screen.LoginScreen
 import com.example.ornamancompose.ui.screen.RegisterScreen
 import com.example.ornamancompose.ui.screen.ScanScreen
+import com.example.ornamancompose.viewmodel.AuthViewModel
+import com.example.ornamancompose.viewmodel.ViewModelFactory
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,20 +54,35 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun OrnamanApp() {
    val navController = rememberNavController()
-   val currentDestinationRoute = navController.currentBackStackEntryAsState()
+   val navBackStackEntry by navController.currentBackStackEntryAsState()
+   val currentRoute = navBackStackEntry?.destination?.route
+
+   val authViewModel : AuthViewModel = viewModel(
+       factory = ViewModelFactory.getInstance()
+   )
 
     Scaffold(
         bottomBar = {
-            if(currentDestinationRoute.value?.destination?.route == "home_screen"){
+            if(
+                currentRoute != "auth_screen" &&
+                currentRoute != Screen.Login.route &&
+                currentRoute != Screen.Register.route
+            ){
                 BottomNav(
                     modifier = Modifier
                         .fillMaxWidth()
                         .wrapContentHeight(),
                     selected = {route ->
-                        currentDestinationRoute.value?.destination?.route == route
+                        currentRoute == route
                     },
                     onItemClick = {route ->
-                        navController.navigate(route)
+                        navController.navigate(route){
+                            popUpTo(Screen.Home.route){
+                                saveState = true
+                            }
+                            restoreState = true
+                            launchSingleTop = true
+                        }
                     }
                 )
             }
@@ -116,20 +136,32 @@ fun OrnamanApp() {
                             navController.navigate(Screen.Register.route){
                                 launchSingleTop = true
                             }
+                        },
+                        viewModel = authViewModel,
+                        onSuccessLogin = {
+                            navController.navigate("home_screen"){
+                                popUpTo(navController.graph.findStartDestination().id){
+                                    inclusive = true
+                                }
+                                launchSingleTop = true
+                            }
                         }
                     )
                 }
                 composable(route = Screen.Register.route){
+                    val navigateToLogin : () -> Unit = {
+                        navController.navigate(Screen.Login.route){
+                            popUpTo(Screen.Login.route){
+                                inclusive = true
+                            }
+                        }
+                    }
                     RegisterScreen(
                         modifier = Modifier
                             .fillMaxSize(),
-                        onSignInClick = {
-                            navController.navigate(Screen.Login.route){
-                                popUpTo(Screen.Login.route){
-                                    inclusive = true
-                                }
-                            }
-                        }
+                        onSignInClick = navigateToLogin,
+                        viewModel = authViewModel,
+                        onSuccessRegister = navigateToLogin
                     )
                 }
             }

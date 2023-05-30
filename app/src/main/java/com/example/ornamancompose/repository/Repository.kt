@@ -35,4 +35,26 @@ class Repository(private val apiService: ApiService) {
         }
     }
 
+    // Override this with the actual implementation
+
+    fun dummyLogin(username : String, password : String) : Flow<UiState<Boolean>> = flow {
+        emit(UiState.Loading)
+        val loginStatus = username == "jokohartono12" && password == "jokohartono12"
+        if(loginStatus){
+            emit(UiState.Success(loginStatus))
+        }else{
+            emit(UiState.Error("Unnable to login", 400))
+        }
+    }
+
+    fun dummyRegister(name : String, username: String, password: String) : Flow<UiState<Boolean>> = flow{
+        emit(UiState.Loading)
+        val loginStatus = username.length >= 8 && password.length >= 8
+        if(loginStatus){
+            emit(UiState.Success(loginStatus))
+        }else{
+            emit(UiState.Error("Unnable to register", 400))
+        }
+    }
+
 }

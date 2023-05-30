@@ -16,9 +16,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.example.compose.OrnamanComposeTheme
 import com.example.ornamancompose.R
 import com.example.ornamancompose.model.remote.PlantScanResponse
 
@@ -39,7 +41,7 @@ fun ScanResultScreen(
         )
         Text(
             text = stringResource(R.string.plant_name, scanResult.kelas),
-            style = MaterialTheme.typography.bodyLarge,
+            style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier
                 .padding(top = 15.dp)
                 .fillMaxWidth(),
@@ -47,7 +49,7 @@ fun ScanResultScreen(
         )
         Text(
             text = stringResource(R.string.confidence_prediction, scanResult.confidence),
-            style = MaterialTheme.typography.bodyLarge,
+            style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier
                 .padding(top = 15.dp)
                 .fillMaxWidth(),
@@ -55,7 +57,7 @@ fun ScanResultScreen(
         )
         Text(
             text = scanResult.description,
-            style = MaterialTheme.typography.bodyMedium,
+            style = MaterialTheme.typography.bodySmall,
             modifier = Modifier
                 .padding(top = 15.dp)
                 .fillMaxWidth()
@@ -86,13 +88,13 @@ fun CardImage(
     }
 }
 
-//@Preview(showBackground = true, showSystemUi = true)
-//@Composable
-//fun CardImagePrev() {
-//    OrnamanComposeTheme {
-//        ScanResultScreen(
-//            scanResult = PlantScanResponse("","","")
-//        )
-//    }
-//}
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun CardImagePrev() {
+    OrnamanComposeTheme {
+        ScanResultScreen(
+            scanResult = PlantScanResponse("","","", "")
+        )
+    }
+}
 

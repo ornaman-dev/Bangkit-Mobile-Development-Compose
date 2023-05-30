@@ -29,9 +29,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.compose.OrnamanComposeTheme
 import com.example.ornamancompose.R
 import com.example.ornamancompose.repository.UiState
 import com.example.ornamancompose.ui.component.IconCard
@@ -84,7 +86,7 @@ fun ScanScreen(
         if(uploadedFile == null){
             Scan(
                 onClickUploadGallery = {
-                    launcherGallery.launch("image/jpeg image/png")
+                    launcherGallery.launch("image/*")
                 },
                 onClickTakePicture = {
                     takePhoto(context){intent ->
@@ -168,14 +170,14 @@ private fun takePhoto(context : Context, launchIntentCamera : (Intent) -> Unit){
     }
 }
 
-//@Preview(showBackground = true, showSystemUi = true)
-//@Composable
-//fun ScanPreview() {
-//    OrnamanComposeTheme {
-//        Scan(
-//            modifier = Modifier
-//                .fillMaxSize()
-//        )
-//    }
-//}
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun ScanPreview() {
+    OrnamanComposeTheme {
+        ScanScreen(
+            modifier = Modifier
+                .fillMaxSize()
+        )
+    }
+}
 

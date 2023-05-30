@@ -2,6 +2,7 @@ package com.example.ornamancompose.ui.component
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -35,27 +36,24 @@ fun InputText(
     placeholder : String,
     errorRule : (String) -> Boolean = {false},
     visualTransformation : VisualTransformation = VisualTransformation.None,
-    errorMessage : String = ""
+    errorMessage : String = "",
+    onValueChanged : (String) -> Unit,
+    text : String
 ) {
-    var text by remember{
-        mutableStateOf("")
-    }
-
     TextField(
         value = text,
-        onValueChange = {
-            text = it
-        },
+        onValueChange = onValueChanged,
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 10.dp)
-            .heightIn(min = 40.dp)
+            .padding(vertical = 20.dp)
             .border(width = 1.dp, color = Color.Black, shape = RoundedCornerShape(5.dp))
             .clip(RoundedCornerShape(5.dp)),
         placeholder = {
             Text(
                 text = placeholder,
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier
+                    .padding(0.dp)
             )
         },
         singleLine = true,
@@ -82,12 +80,14 @@ fun InputText(
     )
 }
 
-//@Preview(showBackground = true)
-//@Composable
-//fun InputTextPreview() {
-//    OrnamanComposeTheme {
-//        InputText(
-//            placeholder = "Username"
-//        )
-//    }
-//}
+@Preview(showBackground = true)
+@Composable
+fun InputTextPreview() {
+    OrnamanComposeTheme {
+        InputText(
+            placeholder = "Username",
+            onValueChanged = {it -> },
+            text = ""
+        )
+    }
+}

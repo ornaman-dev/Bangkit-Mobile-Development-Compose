@@ -12,25 +12,77 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.compose.OrnamanComposeTheme
 import com.example.ornamancompose.R
-import com.example.ornamancompose.ui.component.InputText
 import com.example.ornamancompose.ui.component.PrimaryButton
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.ornamancompose.repository.UiState
+import com.example.ornamancompose.ui.component.InputText
+import com.example.ornamancompose.ui.component.ProgressBar
+import com.example.ornamancompose.util.showToast
+import com.example.ornamancompose.viewmodel.AuthViewModel
+import com.example.ornamancompose.viewmodel.ViewModelFactory
 
 @Composable
 fun RegisterScreen(
     modifier : Modifier = Modifier,
-    onRegisterClick : () -> Unit = {},
-    onSignInClick : () -> Unit = {}
+    viewModel: AuthViewModel,
+    onSignInClick : () -> Unit = {},
+    onSuccessRegister : () -> Unit = {}
 ) {
+
+    var username by remember{
+        mutableStateOf("")
+    }
+    var password by remember{
+        mutableStateOf("")
+    }
+    var name by remember{
+        mutableStateOf("")
+    }
+    var isLoading by remember{
+        mutableStateOf(false)
+    }
+    var requestCounter by remember{
+        mutableStateOf(0)
+    }
+    val context = LocalContext.current
+    val registerState by viewModel.registerStateFlow.collectAsState()
+
+    LaunchedEffect(requestCounter){
+        when(registerState){
+            is UiState.Loading -> isLoading = true
+            is UiState.Error -> {
+                isLoading = false
+                showToast(context, "${(registerState as UiState.Error).code} \\t message : ${(registerState as UiState.Error).message}\"")
+            }
+            is UiState.Exception -> {
+                isLoading = false
+                showToast(context, (registerState as UiState.Exception).message)
+            }
+            is UiState.Success -> {
+                if((registerState as UiState.Success).data){
+                    onSuccessRegister()
+                }
+            }
+        }
+    }
+
     Box(
         modifier = modifier,
         contentAlignment = Alignment.Center
@@ -70,14 +122,22 @@ fun RegisterScreen(
                     .fillMaxWidth()
             )
             InputText(
-                placeholder = stringResource(R.string.name_placeholder)
+                placeholder = stringResource(R.string.name_placeholder),
+                onValueChanged = {newValue ->
+                    name = newValue
+                },
+                text = name
             )
             InputText(
                 placeholder = stringResource(R.string.username_placeholder),
                 errorRule = {text ->
                     text.length < 8 && text.isNotEmpty()
                 },
-                errorMessage = stringResource(R.string.username_error_message)
+                errorMessage = stringResource(R.string.username_error_message),
+                onValueChanged = {newValue ->
+                    username = newValue
+                },
+                text = username
             )
             InputText(
                 placeholder = stringResource(R.string.password_placeholder),
@@ -87,14 +147,25 @@ fun RegisterScreen(
                 visualTransformation = PasswordVisualTransformation(),
                 errorMessage = stringResource(R.string.password_error_message),
                 modifier = Modifier
-                    .padding(bottom = 50.dp)
+                    .padding(bottom = 50.dp),
+                onValueChanged = {newValue ->
+                    password = newValue
+                },
+                text = password
             )
-            PrimaryButton(
-                text = stringResource(R.string.register),
-                modifier = Modifier
-                    .fillMaxWidth(),
-                onClick = onRegisterClick
-            )
+            if(isLoading){
+                ProgressBar()
+            }else{
+                PrimaryButton(
+                    text = stringResource(R.string.register),
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    onClick = {
+                        viewModel.register(name, username, password)
+                        requestCounter++
+                    }
+                )
+            }
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
@@ -124,7 +195,8 @@ fun RegisterScreen() {
     OrnamanComposeTheme {
         RegisterScreen(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxSize(),
+            viewModel = viewModel<AuthViewModel>(factory = ViewModelFactory.getInstance())
         )
     }
 }

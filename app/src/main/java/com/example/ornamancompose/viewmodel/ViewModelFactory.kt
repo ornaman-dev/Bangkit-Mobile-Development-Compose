@@ -10,6 +10,8 @@ class ViewModelFactory : ViewModelProvider.NewInstanceFactory() {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if(modelClass.isAssignableFrom(ScanViewModel::class.java)){
             return ScanViewModel(DependencyInjector.provideRepostiory()) as T
+        }else if(modelClass.isAssignableFrom(AuthViewModel::class.java)){
+            return AuthViewModel(DependencyInjector.provideRepostiory()) as T
         }
         throw IllegalArgumentException("Unknown view model")
     }
