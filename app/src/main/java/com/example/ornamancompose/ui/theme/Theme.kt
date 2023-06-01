@@ -2,8 +2,8 @@ package com.example.compose
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
+import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 import com.example.ornamancompose.ui.theme.Typography
 
@@ -86,7 +86,7 @@ fun OrnamanComposeTheme(
 
   MaterialTheme(
     colorScheme = colors,
-    typography = Typography,
-    content = content
+    content = content,
+    typography = Typography
   )
 }

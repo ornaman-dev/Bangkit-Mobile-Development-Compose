@@ -75,7 +75,8 @@ fun InputText(
             unfocusedIndicatorColor = Color.Transparent,
             containerColor = MaterialTheme.colorScheme.surface
         ),
-        shape = RoundedCornerShape(5.dp)
+        shape = RoundedCornerShape(5.dp),
+        textStyle = MaterialTheme.typography.bodyMedium
 
     )
 }

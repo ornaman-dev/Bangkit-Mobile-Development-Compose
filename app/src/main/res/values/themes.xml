@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.OrnamanCompose" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.OrnamanCompose" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:statusBarColor">@color/light_green</item>
+    </style>
+    <style name="SplashScreenTheme" parent="Theme.OrnamanCompose">
+        <item name="android:windowBackground">@drawable/bg_splash_screen</item>
+    </style>
 </resources>

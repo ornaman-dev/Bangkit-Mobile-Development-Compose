@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -27,6 +29,7 @@ import com.example.ornamancompose.R
 import com.example.ornamancompose.ui.component.PrimaryButton
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -58,7 +61,7 @@ fun RegisterScreen(
     var isLoading by remember{
         mutableStateOf(false)
     }
-    var requestCounter by remember{
+    var requestCounter by rememberSaveable{
         mutableStateOf(0)
     }
     val context = LocalContext.current
@@ -83,6 +86,7 @@ fun RegisterScreen(
         }
     }
 
+
     Box(
         modifier = modifier,
         contentAlignment = Alignment.Center
@@ -91,7 +95,8 @@ fun RegisterScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
-                .padding(horizontal = 15.dp),
+                .padding(horizontal = 15.dp)
+                .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(5.dp)
         ) {
