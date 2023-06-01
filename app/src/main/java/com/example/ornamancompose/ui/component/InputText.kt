@@ -24,10 +24,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.compose.OrnamanComposeTheme
+import com.example.ornamancompose.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -38,8 +41,14 @@ fun InputText(
     visualTransformation : VisualTransformation = VisualTransformation.None,
     errorMessage : String = "",
     onValueChanged : (String) -> Unit,
-    text : String
+    text : String,
+    isPasswordType : Boolean = false
 ) {
+
+    var visualTransformationState by remember{
+        mutableStateOf(visualTransformation)
+    }
+
     TextField(
         value = text,
         onValueChange = onValueChanged,
@@ -58,7 +67,7 @@ fun InputText(
         },
         singleLine = true,
         isError = errorRule(text),
-        visualTransformation = visualTransformation,
+        visualTransformation = visualTransformationState,
         supportingText = {
             if(errorRule(text)){
                 Text(
@@ -76,8 +85,21 @@ fun InputText(
             containerColor = MaterialTheme.colorScheme.surface
         ),
         shape = RoundedCornerShape(5.dp),
-        textStyle = MaterialTheme.typography.bodyMedium
-
+        textStyle = MaterialTheme.typography.bodyMedium,
+        trailingIcon = {
+            if(isPasswordType){
+                IconButton(
+                    onClick = {
+                        visualTransformationState = if(visualTransformationState == VisualTransformation.None) PasswordVisualTransformation() else VisualTransformation.None
+                    }
+                ) {
+                    Icon(
+                        painter = painterResource(id = if (visualTransformationState == VisualTransformation.None) R.drawable.eye else R.drawable.eye_crossed),
+                        contentDescription = null
+                    )
+                }
+            }
+        }
     )
 }
 
@@ -87,8 +109,9 @@ fun InputTextPreview() {
     OrnamanComposeTheme {
         InputText(
             placeholder = "Username",
-            onValueChanged = {it -> },
-            text = ""
+            onValueChanged = {_ -> },
+            text = "",
+            isPasswordType = true
         )
     }
 }

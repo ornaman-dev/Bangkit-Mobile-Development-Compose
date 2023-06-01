@@ -5,9 +5,10 @@
         <color android:color="@color/light_green"/>
     </item>
 
-    <item android:width="285dp"
-        android:height="99dp"
-        android:drawable="@drawable/ornaman_logo"
+    <item
+        android:width="400dp"
+        android:height="100dp"
+        android:drawable="@drawable/logo_ornaman"
         android:gravity="center"/>
 
 </layer-list>

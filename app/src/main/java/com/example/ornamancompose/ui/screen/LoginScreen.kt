@@ -145,7 +145,8 @@ fun LoginScreen(
                 onValueChanged = {newValue ->
                     password = newValue
                 },
-                text = password
+                text = password,
+                isPasswordType = true
             )
             if(isLoading){
                 ProgressBar()
