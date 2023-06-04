@@ -43,7 +43,7 @@ fun IconCard(
             painter = icon,
             contentDescription = null,
             modifier = Modifier
-                .size(30.dp)
+                .size(20.dp)
         )
         Text(
             text = title,

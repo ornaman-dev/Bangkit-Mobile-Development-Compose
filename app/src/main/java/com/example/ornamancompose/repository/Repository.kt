@@ -1,7 +1,13 @@
 package com.example.ornamancompose.repository
 
+
+import NearbySearchResponse
+import PhotosItem
+import PlantScanResponse
+import ResultsItem
+import android.util.Log
+import com.example.ornamancompose.BuildConfig
 import com.example.ornamancompose.model.remote.ApiService
-import com.example.ornamancompose.model.remote.PlantScanResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import okhttp3.MediaType.Companion.toMediaType
@@ -55,6 +61,39 @@ class Repository(private val apiService: ApiService) {
         }else{
             emit(UiState.Error("Unnable to register", 400))
         }
+    }
+
+    //Todo(the nearby search place is succeeded but provide an empty list of result, test all of the query below in postman to debug it)
+    fun searchNearbyStore(lat : String, long : String) : Flow<UiState<List<ResultsItem>>> = flow {
+        val request = mutableMapOf<String, Any>()
+        request["keyword"] = "toko pupuk|toko perlengkapan tanaman|toko perlengkapan kebun"
+        request["location"] = "$lat,$long"
+        request["rankby"] = "distance"
+        request["key"] = BuildConfig.GOOGLE_MAPS_API_KEY
+        try{
+            val response = apiService.searchNearbyPlace(request)
+            val responseBody = response.body()
+            if(response.isSuccessful && responseBody != null){
+//                for(result in responseBody.results){
+//                    for(photo in result.photos){
+//                        photo.photoReference = setPhotoReference(photo.photoReference)
+//                    }
+//                }
+                emit(UiState.Success(responseBody.results))
+                Log.e("NEARBY-TAG", "${response.raw()}")
+                Log.e("NEARBY-TAG", "${response.errorBody()}")
+                Log.e("NEARBY-TAG", "${response.body()}")
+            }else{
+                emit(UiState.Error(response.message(), response.code()))
+            }
+        }catch (e : Exception){
+            emit(UiState.Exception(e.message.toString()))
+            Log.e("NEARBY-TAG", "Error", e)
+        }
+    }
+
+    private fun setPhotoReference(reference : String) : String{
+        return BuildConfig.GOOGLE_MAPS_BASE_API + "photo?maxwidth=400&photo_reference=$reference&key=${BuildConfig.GOOGLE_MAPS_API_KEY}"
     }
 
 }

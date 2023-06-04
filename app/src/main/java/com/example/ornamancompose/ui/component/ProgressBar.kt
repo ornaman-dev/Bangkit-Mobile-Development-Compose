@@ -15,9 +15,12 @@ import com.example.compose.OrnamanComposeTheme
 fun ProgressBar(
     modifier : Modifier = Modifier
 ) {
-    CircularProgressIndicator(
-        modifier = modifier
-    )
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.Center
+    ){
+        CircularProgressIndicator()
+    }
 }
 
 @Preview(showSystemUi = true, showBackground = true)

@@ -1,5 +1,6 @@
 package com.example.ornamancompose
 
+import PlantScanResponse
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -16,21 +17,29 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavArgs
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.compose.OrnamanComposeTheme
 import com.example.ornamancompose.ui.component.BottomNav
 import com.example.ornamancompose.ui.component.InputText
 import com.example.ornamancompose.ui.navigation.Screen
 import com.example.ornamancompose.ui.screen.LoginScreen
 import com.example.ornamancompose.ui.screen.RegisterScreen
+import com.example.ornamancompose.ui.screen.ScanResultScreen
 import com.example.ornamancompose.ui.screen.ScanScreen
+import com.example.ornamancompose.ui.screen.dummyResultsItem
+import com.example.ornamancompose.util.decodeStringUrl
 import com.example.ornamancompose.viewmodel.AuthViewModel
+import com.example.ornamancompose.viewmodel.ScanViewModel
 import com.example.ornamancompose.viewmodel.ViewModelFactory
 
 class MainActivity : ComponentActivity() {
@@ -60,13 +69,17 @@ fun OrnamanApp() {
    val authViewModel : AuthViewModel = viewModel(
        factory = ViewModelFactory.getInstance()
    )
+   val scanViewModel : ScanViewModel = viewModel(
+       factory = ViewModelFactory.getInstance()
+   )
 
     Scaffold(
         bottomBar = {
             if(
                 currentRoute != "auth_screen" &&
                 currentRoute != Screen.Login.route &&
-                currentRoute != Screen.Register.route
+                currentRoute != Screen.Register.route &&
+                currentRoute != Screen.ScanResult.route
             ){
                 BottomNav(
                     modifier = Modifier
@@ -91,7 +104,7 @@ fun OrnamanApp() {
         NavHost(
             navController = navController,
             // Got to check if the user already logged in, by changing the start destination to home_screen if yes and auth_screen otherwise
-            startDestination = "auth_screen"
+            startDestination = "home_screen"
         ){
             navigation(
                 route = "home_screen",
@@ -111,8 +124,13 @@ fun OrnamanApp() {
                 ){
                     ScanScreen(
                         modifier = Modifier
-                            .fillMaxSize()
-                    )
+                            .fillMaxSize(),
+                        viewModel = scanViewModel
+                    ){scanResult, lat, long ->
+                        navController.navigate(
+                            Screen.ScanResult.createRoute(scanResult, lat, long)
+                        )
+                    }
                 }
                 composable(
                     route = Screen.Profile.route
@@ -121,6 +139,53 @@ fun OrnamanApp() {
                         modifier = Modifier
                             .padding(innerPadding),
                         text = Screen.Profile.route
+                    )
+                }
+                composable(
+                    route = Screen.ScanResult.route,
+                    arguments = listOf(
+                        navArgument("kelas"){
+                            type = NavType.StringType
+                        },
+                        navArgument("desc"){
+                            type = NavType.StringType
+                        },
+                        navArgument("conf"){
+                            type = NavType.StringType
+                        },
+                        navArgument("imgUrl"){
+                            type = NavType.StringType
+                        },
+                        navArgument("lat"){
+                            type = NavType.StringType
+                        },
+                        navArgument("long"){
+                            type = NavType.StringType
+                        }
+                    )
+                ){
+                    //Todo(the navigation arguments make the navigation route invalid)
+                    val kelas = it.arguments?.getString("kelas") ?: ""
+                    val desc = it.arguments?.getString("desc") ?: ""
+                    val conf = it.arguments?.getString("conf") ?: ""
+                    val imgUrl = it.arguments?.getString("imgUrl") ?: ""
+                    val lat = it.arguments?.getString("lat") ?: ""
+                    val long = it.arguments?.getString("long") ?: ""
+
+                    val scanResult = PlantScanResponse(
+                        kelas = kelas,
+                        description = desc,
+                        confidence = conf,
+                        imgUrl = decodeStringUrl(imgUrl),
+                    )
+                    ScanResultScreen(
+                        modifier = Modifier
+                            .padding(10.dp)
+                            .fillMaxSize(),
+                        scanResult = scanResult,
+                        lat = lat,
+                        long = long,
+                        viewModel = scanViewModel
                     )
                 }
             }
@@ -169,10 +234,10 @@ fun OrnamanApp() {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun OrnamanAppPreview() {
-    OrnamanComposeTheme {
-        OrnamanApp()
-    }
-}
+//@Preview(showBackground = true, showSystemUi = true)
+//@Composable
+//fun OrnamanAppPreview() {
+//    OrnamanComposeTheme {
+//        OrnamanApp()
+//    }
+//}

@@ -20,7 +20,7 @@ class SplashActivity : ComponentActivity() {
         }
         super.onCreate(savedInstanceState)
         lifecycleScope.launchWhenCreated {
-            delay(3000)
+            delay(2000)
             val intent = Intent(this@SplashActivity, MainActivity::class.java)
             startActivity(intent)
             finish()

@@ -19,6 +19,8 @@ android {
             useSupportLibrary = true
         }
         buildConfigField("String", "BASE_API", "\"https://classification-api-rf6r3bwska-et.a.run.app/\"")
+        buildConfigField("String", "GOOGLE_MAPS_BASE_API", "\"https://maps.googleapis.com/maps/api/place/\"")
+        buildConfigField("String", "GOOGLE_MAPS_API_KEY", "\"AIzaSyAKqVWjXx35lUj19dfPp4X0wKulyO2FVrY\"")
     }
 
     buildTypes {
@@ -82,4 +84,11 @@ dependencies {
 
     // Splash screen Api
     implementation("androidx.core:core-splashscreen:1.0.0")
+
+    //Accompanist permission
+    implementation("com.google.accompanist:accompanist-permissions:0.23.1")
+
+    // Location
+    implementation("com.google.android.gms:play-services-location:18.0.0")
+
 }

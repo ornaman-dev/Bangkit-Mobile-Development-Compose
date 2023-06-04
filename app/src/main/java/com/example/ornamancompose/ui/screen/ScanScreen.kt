@@ -1,13 +1,16 @@
 package com.example.ornamancompose.ui.screen
 
+import PlantScanResponse
+import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.ImageDecoder
+import android.location.LocationManager
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
+import android.provider.Settings
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -19,6 +22,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -43,20 +47,42 @@ import com.example.ornamancompose.util.showToast
 import com.example.ornamancompose.util.uriToFile
 import com.example.ornamancompose.viewmodel.ScanViewModel
 import com.example.ornamancompose.viewmodel.ViewModelFactory
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.PermissionsRequired
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationServices
 import java.io.File
 
 private const val SCANSCREENTAG = "scan_screen_tag"
 
 private lateinit var currentFilePath : String
+private var lat : Double? = null
+private var long : Double? = null
+
+@SuppressLint("MissingPermission")
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun ScanScreen(
-    modifier : Modifier = Modifier
+    modifier : Modifier = Modifier,
+    viewModel : ScanViewModel,
+    scanResultAction : (PlantScanResponse, String, String) -> Unit
 ) {
 
     val context = LocalContext.current
     var uploadedFile by remember{
         mutableStateOf<File?>(null)
     }
+    var isLoading by remember{
+        mutableStateOf(false)
+    }
+
+    val permissions = listOf(
+        Manifest.permission.ACCESS_COARSE_LOCATION,
+        Manifest.permission.ACCESS_FINE_LOCATION
+    )
+
+    val multiplePermissionsState = rememberMultiplePermissionsState(permissions = permissions)
 
     val launcherGallery = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
@@ -75,9 +101,43 @@ fun ScanScreen(
         }
     }
 
-    val viewModel : ScanViewModel = viewModel(
-        factory = ViewModelFactory.getInstance()
-    )
+
+    LaunchedEffect(Unit){
+        multiplePermissionsState.launchMultiplePermissionRequest()
+    }
+
+    val fusedLocationClient = remember{
+        LocationServices.getFusedLocationProviderClient(context)
+    }
+
+    val scanState by viewModel.scanPlantState.collectAsState()
+
+    PermissionsRequired(
+        multiplePermissionsState = multiplePermissionsState,
+        permissionsNotGrantedContent = {
+            // Not granted permission goes here
+        },
+        permissionsNotAvailableContent = {
+            // If the user won't allow the permission content
+        },
+        content = {
+            // Here
+            // Todo(get the last location of user hasn't work yet)
+            if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q){
+                val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+                if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                    val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                    context.startActivity(intent)
+                }
+            }
+            fusedLocationClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, null).addOnSuccessListener { location ->
+                if(location != null){
+                    lat = location.latitude
+                    long = location.longitude
+                    Log.i("LOCATION-TAG", "lat : $lat \t long : $long")
+                }
+            }
+        })
 
     Box(
         modifier = modifier,
@@ -95,30 +155,45 @@ fun ScanScreen(
                 }
             )
         }else{
+            Log.i("ScanScreen-TAG", "All Permissions Granted")
             // Request goes here
-            viewModel.scanPlant(uploadedFile!!).collectAsState(initial = UiState.Loading).value.let{ uiState ->
-                when(uiState){
-                    is UiState.Loading -> {
-                        ProgressBar()
-                    }
-                    is UiState.Exception -> {
-                        showToast(context, uiState.message)
-                    }
-                    is UiState.Error -> {
-                        val message = "${uiState.code} : ${uiState.message}"
-                        showToast(context, message)
-                    }
-                    is UiState.Success -> {
-                        ScanResultScreen(
-                            modifier = Modifier
-                                .fillMaxSize(),
-                            scanResult = uiState.data
-                        )
+            if(lat != null && long != null){
+                LaunchedEffect(Unit){
+                    viewModel.scanPlant(uploadedFile!!)
+                }
+                LaunchedEffect(scanState){
+                    when(scanState){
+                        is UiState.Loading -> {
+                            isLoading = true
+                        }
+                        is UiState.Exception -> {
+                            isLoading = false
+                            showToast(context, (scanState as UiState.Exception).message)
+                        }
+                        is UiState.Error -> {
+                            isLoading = false
+                            val message = "${(scanState as UiState.Error).code} : ${(scanState as UiState.Error).message}"
+                            showToast(context, message)
+                        }
+                        is UiState.Success -> {
+                            isLoading = false
+                            scanResultAction(
+                                (scanState as UiState.Success<PlantScanResponse>).data,
+                                "$lat",
+                                "$long"
+                            )
+                        }
                     }
                 }
             }
         }
+
+        if(isLoading){
+            ProgressBar()
+        }
     }
+
+
 }
 
 @Composable
@@ -170,14 +245,14 @@ private fun takePhoto(context : Context, launchIntentCamera : (Intent) -> Unit){
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun ScanPreview() {
-    OrnamanComposeTheme {
-        ScanScreen(
-            modifier = Modifier
-                .fillMaxSize()
-        )
-    }
-}
+//@Preview(showBackground = true, showSystemUi = true)
+//@Composable
+//fun ScanPreview() {
+//    OrnamanComposeTheme {
+//        ScanScreen(
+//            modifier = Modifier
+//                .fillMaxSize()
+//        )
+//    }
+//}
 
