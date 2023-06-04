@@ -145,12 +145,7 @@ fun ListRecommendationStore(
         modifier = modifier
     ){
         items(data){ item ->
-            StoreCard(
-                name = item.name,
-                address = item.vicinity,
-                isOpen = item.openingHours.openNow,
-                rating = item.rating
-            )
+            StoreCard(data = item)
         }
     }
 }

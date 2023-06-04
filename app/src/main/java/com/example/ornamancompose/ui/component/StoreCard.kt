@@ -1,5 +1,9 @@
 package com.example.ornamancompose.ui.component
 
+import ResultsItem
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -30,19 +35,22 @@ import coil.compose.AsyncImage
 import com.example.ornamancompose.R
 import com.example.ornamancompose.ui.theme.Poppins
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StoreCard(
     modifier : Modifier = Modifier,
-    name : String,
-    address : String,
-    isOpen : Boolean,
-    rating : String
+    data : ResultsItem
 ) {
+    val context = LocalContext.current
     OutlinedCard(
         modifier = modifier
             .width(200.dp)
             .wrapContentHeight(),
-        shape = RoundedCornerShape(5.dp)
+        shape = RoundedCornerShape(5.dp),
+        onClick = {
+            val location = data.geometry.location
+            intentToGoogleMap(context, location.lat, location.lng)
+        }
     ) {
         Image(
             painter = painterResource(R.drawable.plant_store),
@@ -60,7 +68,7 @@ fun StoreCard(
             verticalArrangement = Arrangement.spacedBy(3.dp)
         ){
             Text(
-                text = name,
+                text = data.name,
                 style = TextStyle(
                     fontFamily = Poppins,
                     fontWeight = FontWeight(400),
@@ -72,7 +80,7 @@ fun StoreCard(
                 overflow = TextOverflow.Ellipsis
             )
             Text(
-                text = address,
+                text = data.vicinity,
                 style = TextStyle(
                     fontFamily = Poppins,
                     fontWeight = FontWeight(400),
@@ -85,7 +93,7 @@ fun StoreCard(
             )
             Row {
                 Text(
-                    text = if(isOpen)"Buka" else "Tutup",
+                    text = if(data.openingHours.openNow)"Buka" else "Tutup",
                     style = TextStyle(
                         fontFamily = Poppins,
                         fontWeight = FontWeight(700),
@@ -103,7 +111,7 @@ fun StoreCard(
                         .padding(end = 5.dp)
                 )
                 Text(
-                    text = "$rating",
+                    text = data.rating,
                     style = TextStyle(
                         fontFamily = Poppins,
                         fontWeight = FontWeight(400),
@@ -117,18 +125,26 @@ fun StoreCard(
     }
 }
 
+private fun intentToGoogleMap(context : Context, lat : Double, long : Double){
+    val gmmIntentUri = Uri.parse("geo:$lat,$long")
+    val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+    mapIntent.resolveActivity(context.packageManager)?.let{
+        context.startActivity(mapIntent)
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
 fun StoreCardPreview() {
-    Scaffold {paddingValues ->
-        StoreCard(
-            modifier = Modifier
-                .padding(paddingValues),
-            name = "Toko pupuk jaya baru",
-            address = "Jl. Jati kenangan No. 25",
-            isOpen = true,
-            rating = "4.0"
-        )
-    }
+//    Scaffold {paddingValues ->
+//        StoreCard(
+//            modifier = Modifier
+//                .padding(paddingValues),
+//            name = "Toko pupuk jaya baru",
+//            address = "Jl. Jati kenangan No. 25",
+//            isOpen = true,
+//            rating = "4.0"
+//        )
+//    }
 }
