@@ -6,8 +6,8 @@
     </item>
 
     <item
-        android:width="400dp"
-        android:height="100dp"
+        android:width="200dp"
+        android:height="70dp"
         android:drawable="@drawable/logo_ornaman"
         android:gravity="center"/>
 

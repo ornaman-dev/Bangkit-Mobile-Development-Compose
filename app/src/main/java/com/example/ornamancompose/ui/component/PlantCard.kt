@@ -1,12 +1,14 @@
 package com.example.ornamancompose.ui.component
 
 import DummyPlantResponse
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -37,20 +39,20 @@ fun PlantCard(
         modifier = modifier,
         shape = RoundedCornerShape(8.dp),
     ) {
-        AsyncImage(
-            model = data.imgUrl,
+        Image(
+            painter = painterResource(R.drawable.sample_plant),
             contentDescription = null,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(200.dp)
                 .clip(RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp)),
-            placeholder = painterResource(R.drawable.placeholder_image),
             contentScale = ContentScale.Crop
         )
         Text(
             text = data.title,
             style = MaterialTheme.typography.bodySmall,
             modifier = Modifier
+                .padding(top = 10.dp, start = 5.dp, end = 5.dp)
                 .fillMaxWidth(),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
@@ -59,21 +61,24 @@ fun PlantCard(
             text = data.quickDescription,
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier
+                .padding(top = 5.dp, start = 5.dp, end = 5.dp)
                 .fillMaxWidth(),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
         Row(
             modifier = Modifier
+                .padding(top = 5.dp, bottom = 10.dp, start = 5.dp, end = 5.dp)
                 .fillMaxWidth()
         ) {
             AsyncImage(
                 model = data.profileImgUrl,
                 contentDescription = null,
                 modifier = Modifier
-                    .size(24.dp)
-                    .clip(CircleShape),
-                placeholder = painterResource(R.drawable.sample_profile)
+                    .clip(CircleShape)
+                    .size(25.dp),
+                placeholder = painterResource(R.drawable.sample_profile),
+                contentScale = ContentScale.Crop
             )
             Text(
                 text = data.publisher,
@@ -84,13 +89,14 @@ fun PlantCard(
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier
                     .padding(start = 10.dp)
+                    .weight(1f)
             )
             Icon(
                 painter = painterResource(R.drawable.ic_time),
                 contentDescription = null,
                 modifier = Modifier
                     .padding(start = 25.dp)
-                    .size(20.dp)
+                    .size(18.dp)
                     .clip(CircleShape)
             )
             Text(
@@ -102,7 +108,6 @@ fun PlantCard(
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier
                     .padding(start = 10.dp)
-                    .weight(1f)
             )
         }
     }
@@ -114,7 +119,8 @@ fun PlantCardPreview() {
     OrnamanComposeTheme {
         Surface(
             modifier = Modifier
-                .fillMaxSize()
+                .padding(10.dp)
+                .wrapContentHeight()
         ) {
             PlantCard(
                 modifier = Modifier
@@ -122,7 +128,7 @@ fun PlantCardPreview() {
                 data = DummyPlantResponse(
                     title = "Sample title",
                     quickDescription = "Sample quick description Sample quick description Sample quick description Sample quick description",
-                    publishedAt = "4 hours ago",
+                    publishedAt = "4h ago",
                     publisher = "Joko"
                 )
             )

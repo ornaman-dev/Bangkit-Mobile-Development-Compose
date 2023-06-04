@@ -32,6 +32,7 @@ import com.example.compose.OrnamanComposeTheme
 import com.example.ornamancompose.ui.component.BottomNav
 import com.example.ornamancompose.ui.component.InputText
 import com.example.ornamancompose.ui.navigation.Screen
+import com.example.ornamancompose.ui.screen.HomeScreen
 import com.example.ornamancompose.ui.screen.LoginScreen
 import com.example.ornamancompose.ui.screen.RegisterScreen
 import com.example.ornamancompose.ui.screen.ScanResultScreen
@@ -113,10 +114,10 @@ fun OrnamanApp() {
                 composable(
                     route = Screen.Home.route
                 ){
-                    Text(
+                    HomeScreen(
                         modifier = Modifier
-                            .padding(innerPadding),
-                        text = Screen.Home.route
+                            .padding(innerPadding)
+                            .fillMaxSize()
                     )
                 }
                 composable(
@@ -234,10 +235,10 @@ fun OrnamanApp() {
     }
 }
 
-//@Preview(showBackground = true, showSystemUi = true)
-//@Composable
-//fun OrnamanAppPreview() {
-//    OrnamanComposeTheme {
-//        OrnamanApp()
-//    }
-//}
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun OrnamanAppPreview() {
+    OrnamanComposeTheme {
+        OrnamanApp()
+    }
+}
