@@ -19,6 +19,7 @@ android {
             useSupportLibrary = true
         }
         buildConfigField("String", "BASE_API", "\"https://classification-api-rf6r3bwska-et.a.run.app/\"")
+        buildConfigField("String", "TEMP_BASE_API", "\"https://ornamanbackend-1-j5052767.deta.app/\"")
         buildConfigField("String", "GOOGLE_MAPS_BASE_API", "\"https://maps.googleapis.com/maps/api/place/\"")
         buildConfigField("String", "GOOGLE_MAPS_API_KEY", "\"AIzaSyAKqVWjXx35lUj19dfPp4X0wKulyO2FVrY\"")
     }

@@ -1,5 +1,17 @@
 import com.google.gson.annotations.SerializedName
 
+data class LoginResponse(
+	@SerializedName("access_token")
+	val accessToken : String
+)
+
+data class RegisterResponse(
+	val username : String,
+	val email : String,
+	@SerializedName("is_active")
+	val isActive : Boolean
+)
+
 data class DummyPlantResponse(
 	val title : String,
 	val quickDescription : String,

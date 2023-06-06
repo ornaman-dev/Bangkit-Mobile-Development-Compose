@@ -1,5 +1,6 @@
 package com.example.ornamancompose.viewmodel
 
+import LoginResponse
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ornamancompose.repository.Repository
@@ -12,14 +13,14 @@ import kotlinx.coroutines.launch
 
 class AuthViewModel(private val repository: Repository) : ViewModel() {
 
-    private val _mutableLoginStateFlow = MutableStateFlow<UiState<Boolean>>(UiState.Success(false))
-    val loginStateFlow : StateFlow<UiState<Boolean>> get() = _mutableLoginStateFlow
+    private val _mutableLoginStateFlow = MutableStateFlow<UiState<LoginResponse>>(UiState.Success(LoginResponse("")))
+    val loginStateFlow : StateFlow<UiState<LoginResponse>> get() = _mutableLoginStateFlow
 
     private val _mutableRegisterStateFlow = MutableStateFlow<UiState<Boolean>>(UiState.Success(false))
     val registerStateFlow : StateFlow<UiState<Boolean>> get() = _mutableRegisterStateFlow
 
-    fun login(username : String, password : String) = viewModelScope.launch {
-        repository.dummyLogin(username, password)
+    fun login(email : String, password : String) = viewModelScope.launch {
+        repository.login(email, password)
             .catch {
                 _mutableLoginStateFlow.value = UiState.Exception(it.message.toString())
             }

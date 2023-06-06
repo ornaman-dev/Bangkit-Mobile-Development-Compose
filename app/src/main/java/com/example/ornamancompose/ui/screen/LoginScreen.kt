@@ -64,20 +64,20 @@ fun LoginScreen(
         mutableStateOf(0)
     }
 
-    LaunchedEffect(requestCounter){
+    LaunchedEffect(loginState){
         Log.i("LOGIN-TAG", "$loginState")
         when(loginState){
             is UiState.Loading -> isLoading = true
             is UiState.Error -> {
                 isLoading = false
-                showToast(context, "code : ${(loginState as UiState.Error).code} \t message : ${(loginState as UiState.Error).message}")
+                showToast(context, (loginState as UiState.Error).message)
             }
             is UiState.Exception -> {
                 isLoading = false
                 showToast(context, (loginState as UiState.Exception).message)
             }
             is UiState.Success -> {
-                if((loginState as UiState.Success).data){
+                if((loginState as UiState.Success).data.accessToken.isNotEmpty()){
                     onSuccessLogin()
                 }
             }
@@ -156,8 +156,11 @@ fun LoginScreen(
                     modifier = Modifier
                         .fillMaxWidth(),
                     onClick = {
-                        viewModel.login(username, password)
-                        requestCounter++
+                        if(username.isNotEmpty() && password.isNotEmpty()){
+                            viewModel.login(username, password)
+                        }else{
+                            showToast(context, context.getString(R.string.username_or_password_empty))
+                        }
                     }
                 )
             }

@@ -25,4 +25,5 @@
     <string name="us">Us!</string>
     <string name="nearby_plant_store">Toko perlengkapan tanaman di sekitar</string>
     <string name="permission_not_granted">Permisison should be granted</string>
+    <string name="username_or_password_empty">Username or password cannot be empty</string>
 </resources>
