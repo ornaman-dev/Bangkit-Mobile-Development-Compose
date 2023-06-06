@@ -21,6 +21,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -33,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
@@ -41,6 +44,7 @@ import com.example.compose.OrnamanComposeTheme
 import com.example.ornamancompose.R
 import com.example.ornamancompose.repository.UiState
 import com.example.ornamancompose.ui.component.IconCard
+import com.example.ornamancompose.ui.component.PermissionDialog
 import com.example.ornamancompose.ui.component.ProgressBar
 import com.example.ornamancompose.util.createCustomTempFile
 import com.example.ornamancompose.util.showToast
@@ -70,19 +74,120 @@ fun ScanScreen(
 ) {
 
     val context = LocalContext.current
+    var isShowPermissionDialog by remember{
+        mutableStateOf(true)
+    }
+    val permissions = listOf(
+        Manifest.permission.ACCESS_COARSE_LOCATION,
+        Manifest.permission.ACCESS_FINE_LOCATION
+    )
+    val multiplePermissionsState = rememberMultiplePermissionsState(permissions = permissions)
+    val fusedLocationClient = remember{
+        LocationServices.getFusedLocationProviderClient(context)
+    }
+
+    LaunchedEffect(Unit){
+        multiplePermissionsState.launchMultiplePermissionRequest()
+    }
+
+    PermissionsRequired(
+        multiplePermissionsState = multiplePermissionsState,
+        permissionsNotGrantedContent = {
+            PermissionNotGrantedContent(
+                title = "Permission should be granted"
+            )
+        },
+        permissionsNotAvailableContent = {
+            PermissionNotGrantedContent(
+                title = "Permission should be granted"
+            )
+        },
+        content = {
+            if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q){
+                val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+                if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+                    if(isShowPermissionDialog){
+                        PermissionDialog(
+                            title = "Location is required to recommend nearby store",
+                            negativeText = "Cancel",
+                            positiveText = "Turn on",
+                            negativeAction = {
+                                isShowPermissionDialog = false
+                            },
+                            dismissAction = {
+                                isShowPermissionDialog = false
+                            },
+                            positiveAction = {
+                                val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                                context.startActivity(intent)
+                            }
+                        )
+                    }else{
+                        PermissionNotGrantedContent(
+                            title = "Location should be turned on"
+                        )
+                    }
+                }else{
+                    PermissionGrantedContent(
+                        modifier = modifier,
+                        context = context,
+                        viewModel = viewModel,
+                        scanResultAction = scanResultAction
+                    )
+                }
+            }else{
+                PermissionGrantedContent(
+                    modifier = modifier,
+                    context = context,
+                    viewModel = viewModel,
+                    scanResultAction = scanResultAction
+                )
+            }
+            fusedLocationClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, null).addOnSuccessListener { location ->
+                if(location != null){
+                    lat = location.latitude
+                    long = location.longitude
+                    Log.i("LOCATION-TAG", "lat : $lat \t long : $long")
+                }
+            }
+        })
+}
+
+@Composable
+fun PermissionNotGrantedContent(
+    modifier: Modifier = Modifier,
+    title : String
+) {
+    Box(
+        modifier = modifier
+            .fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ){
+        Text(
+            text = title,
+            modifier = Modifier
+                .fillMaxWidth(),
+            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.bodyMedium
+        )
+    }
+}
+
+@Composable
+fun PermissionGrantedContent(
+    modifier: Modifier = Modifier,
+    context: Context,
+    viewModel: ScanViewModel,
+    scanResultAction : (PlantScanResponse, String, String) -> Unit
+) {
+
+    val scanState by viewModel.scanPlantState.collectAsState()
     var uploadedFile by remember{
         mutableStateOf<File?>(null)
     }
     var isLoading by remember{
         mutableStateOf(false)
     }
-
-    val permissions = listOf(
-        Manifest.permission.ACCESS_COARSE_LOCATION,
-        Manifest.permission.ACCESS_FINE_LOCATION
-    )
-
-    val multiplePermissionsState = rememberMultiplePermissionsState(permissions = permissions)
 
     val launcherGallery = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
@@ -101,43 +206,6 @@ fun ScanScreen(
         }
     }
 
-
-    LaunchedEffect(Unit){
-        multiplePermissionsState.launchMultiplePermissionRequest()
-    }
-
-    val fusedLocationClient = remember{
-        LocationServices.getFusedLocationProviderClient(context)
-    }
-
-    val scanState by viewModel.scanPlantState.collectAsState()
-
-    PermissionsRequired(
-        multiplePermissionsState = multiplePermissionsState,
-        permissionsNotGrantedContent = {
-            // Not granted permission goes here
-        },
-        permissionsNotAvailableContent = {
-            // If the user won't allow the permission content
-        },
-        content = {
-            // Here
-            // Todo(get the last location of user hasn't work yet)
-            if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q){
-                val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-                if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                    val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-                    context.startActivity(intent)
-                }
-            }
-            fusedLocationClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, null).addOnSuccessListener { location ->
-                if(location != null){
-                    lat = location.latitude
-                    long = location.longitude
-                    Log.i("LOCATION-TAG", "lat : $lat \t long : $long")
-                }
-            }
-        })
 
     Box(
         modifier = modifier,
@@ -192,8 +260,6 @@ fun ScanScreen(
             ProgressBar()
         }
     }
-
-
 }
 
 @Composable

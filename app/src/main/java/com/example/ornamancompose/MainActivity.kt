@@ -105,7 +105,7 @@ fun OrnamanApp() {
         NavHost(
             navController = navController,
             // Got to check if the user already logged in, by changing the start destination to home_screen if yes and auth_screen otherwise
-            startDestination = "auth_screen"
+            startDestination = "home_screen"
         ){
             navigation(
                 route = "home_screen",
@@ -165,7 +165,6 @@ fun OrnamanApp() {
                         }
                     )
                 ){
-                    //Todo(the navigation arguments make the navigation route invalid)
                     val kelas = it.arguments?.getString("kelas") ?: ""
                     val desc = it.arguments?.getString("desc") ?: ""
                     val conf = it.arguments?.getString("conf") ?: ""
