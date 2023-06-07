@@ -5,7 +5,6 @@ import android.content.Context
 import android.net.Uri
 import android.os.Environment
 import android.widget.Toast
-import com.google.gson.Gson
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
@@ -15,6 +14,10 @@ import java.net.URLEncoder
 import java.text.SimpleDateFormat
 import java.util.Date
 
+
+fun Double.roundToDecimalPlace(numberOfPlaces : Int) : Double{
+    return String.format("%.${numberOfPlaces}f", this).toDouble()
+}
 
 fun encodeStringUrl(url: String): String = URLEncoder.encode(url, "UTF-8")
 fun decodeStringUrl(encodedUrl : String) : String = URLDecoder.decode(encodedUrl, "UTF-8")

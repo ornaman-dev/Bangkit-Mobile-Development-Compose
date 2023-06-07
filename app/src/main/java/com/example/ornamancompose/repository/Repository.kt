@@ -9,6 +9,7 @@ import ResultsItem
 import android.util.Log
 import com.example.ornamancompose.BuildConfig
 import com.example.ornamancompose.model.remote.ApiService
+import com.example.ornamancompose.util.roundToDecimalPlace
 import com.google.gson.JsonObject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -33,7 +34,11 @@ class Repository(private val apiService: ApiService) {
             val response = apiService.scanPlant(imageMultipart)
             val responseBody = response.body()
             if(response.isSuccessful && responseBody != null){
-                emit(UiState.Success(responseBody))
+                val confidence = responseBody.confidence * 100.0
+                val data = responseBody.copy(
+                    confidence = confidence
+                )
+                emit(UiState.Success(data))
             }else{
                 emit(UiState.Error(response.message(), response.code()))
             }

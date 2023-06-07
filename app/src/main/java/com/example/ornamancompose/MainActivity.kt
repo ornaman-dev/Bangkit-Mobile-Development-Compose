@@ -175,7 +175,7 @@ fun OrnamanApp() {
                     val scanResult = PlantScanResponse(
                         kelas = kelas,
                         description = desc,
-                        confidence = conf,
+                        confidence = conf.toDouble(),
                         imgUrl = decodeStringUrl(imgUrl),
                     )
                     ScanResultScreen(

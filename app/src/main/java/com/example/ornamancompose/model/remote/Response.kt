@@ -25,7 +25,7 @@ data class PlantScanResponse(
 	@SerializedName("class")
 	val kelas : String,
 	val description : String,
-	val confidence : String,
+	val confidence : Double,
 	@SerializedName("image")
 	val imgUrl : String
 )
