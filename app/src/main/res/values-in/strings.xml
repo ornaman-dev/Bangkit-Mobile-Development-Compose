@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Ornaman</string>
+    <string name="home_bottom_nav_menu">Home</string>
+    <string name="scan_bottom_nav_menu">Scan</string>
+    <string name="profile_bottom_nav_menu">Profile</string>
+    <string name="action_upload_from_gallery">Unggah dari galeri</string>
+    <string name="action_take_a_picture">Ambil gambar</string>
+    <string name="plant_name">Nama tanaman: <b>%s</b></string>
+    <string name="confidence_prediction">Akurasi: %.3f%</string>
+    <string name="username_placeholder">Nama Pengguna</string>
+    <string name="password_placeholder">Kata Sandi</string>
+    <string name="email_placeholder">Email</string>
+    <string name="password_error_message">Kata sandi minimal 8 karakter</string>
+    <string name="username_error_message">Nama pengguna tidak boleh kosong</string>
+    <string name="email_error_message">Format email tidak valid</string>
+    <string name="already_have_an_account">Sudah punya akun?</string>
+    <string name="dont_have_an_account">Belum punya akun?</string>
+    <string name="login_greeting">Halo</string>
+    <string name="login_greeting_2">Lagi!</string>
+    <string name="login_greeting_3">Selamat datang kembali, kami merindukanmu</string>
+    <string name="sign_in">Masuk</string>
+    <string name="sign_up">Daftar</string>
+    <string name="login">Masuk</string>
+    <string name="register">Daftar</string>
+    <string name="join">Bergabung</string>
+    <string name="us">Bersama Kami!</string>
+    <string name="nearby_plant_store">Toko Terdekat</string>
+    <string name="permission_not_granted">Izin harus diberikan</string>
+    <string name="username_or_password_empty">Nama pengguna atau kata sandi tidak boleh kosong</string>
+    <string name="familiy_name">Nama Famili: %s</string>
+    <string name="common_name_and_class_name">%1$s (%2$s)</string>
+    <string name="field_empty">Kolom tidak boleh kosong</string>
+    <string name="logout">Keluar</string>
+    <string name="language">Bahasa</string>
+    <string name="account">Akun</string>
+</resources>

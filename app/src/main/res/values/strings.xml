@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">OrnamanCompose</string>
+    <string name="app_name">Ornaman</string>
     <string name="home_bottom_nav_menu">Home</string>
     <string name="scan_bottom_nav_menu">Scan</string>
     <string name="profile_bottom_nav_menu">Profile</string>
@@ -24,10 +24,13 @@
     <string name="register">Register</string>
     <string name="join">Join</string>
     <string name="us">Us!</string>
-    <string name="nearby_plant_store">Toko perlengkapan tanaman di sekitar</string>
+    <string name="nearby_plant_store">Nearby store</string>
     <string name="permission_not_granted">Permisison should be granted</string>
     <string name="username_or_password_empty">Username or password cannot be empty</string>
     <string name="familiy_name">Family name : %s</string>
-    <string name="common_name_and_class_name">%1$s (<i>%2$s</i>)</string>
+    <string name="common_name_and_class_name">%1$s (%2$s)</string>
     <string name="field_empty">Field cannot be empty</string>
+    <string name="logout">Logout</string>
+    <string name="language">Language</string>
+    <string name="account">Account</string>
 </resources>

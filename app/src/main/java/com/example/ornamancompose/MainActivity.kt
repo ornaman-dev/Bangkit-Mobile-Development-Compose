@@ -34,6 +34,7 @@ import com.example.ornamancompose.ui.component.InputText
 import com.example.ornamancompose.ui.navigation.Screen
 import com.example.ornamancompose.ui.screen.HomeScreen
 import com.example.ornamancompose.ui.screen.LoginScreen
+import com.example.ornamancompose.ui.screen.ProfileScreen
 import com.example.ornamancompose.ui.screen.RegisterScreen
 import com.example.ornamancompose.ui.screen.ScanResultScreen
 import com.example.ornamancompose.ui.screen.ScanScreen
@@ -105,7 +106,7 @@ fun OrnamanApp() {
         NavHost(
             navController = navController,
             // Got to check if the user already logged in, by changing the start destination to home_screen if yes and auth_screen otherwise
-            startDestination = "auth_screen"
+            startDestination = "home_screen"
         ){
             navigation(
                 route = "home_screen",
@@ -136,10 +137,10 @@ fun OrnamanApp() {
                 composable(
                     route = Screen.Profile.route
                 ){
-                    Text(
+                    ProfileScreen(
                         modifier = Modifier
-                            .padding(innerPadding),
-                        text = Screen.Profile.route
+                            .padding(15.dp)
+                            .fillMaxSize()
                     )
                 }
                 composable(

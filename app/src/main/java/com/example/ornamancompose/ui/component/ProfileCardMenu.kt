@@ -1,6 +1,7 @@
 package com.example.ornamancompose.ui.component
 
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
@@ -31,15 +33,18 @@ fun ProfileCardMenu(
     modifier : Modifier = Modifier,
     title : String,
     color : Color = MaterialTheme.colorScheme.primary,
-    icon : Painter = painterResource(R.drawable.ic_arrow_right)
+    icon : Painter = painterResource(R.drawable.ic_arrow_right),
+    onClick : () -> Unit
 ) {
+    val shape = RoundedCornerShape(8.dp)
         Row(
             modifier = modifier
-                .border(1.dp, color)
-                .clip(RoundedCornerShape(8.dp))
+                .border(1.dp, color, shape)
+                .clip(shape)
                 .padding(15.dp)
                 .fillMaxWidth()
                 .wrapContentHeight()
+                .clickable { onClick() }
         ) {
             Text(
                 text = title,
@@ -65,7 +70,9 @@ fun ProfileCardMenuPreview() {
         ){
             ProfileCardMenu(
                 title = "Account"
-            )
+            ){
+
+            }
         }
     }
 }
