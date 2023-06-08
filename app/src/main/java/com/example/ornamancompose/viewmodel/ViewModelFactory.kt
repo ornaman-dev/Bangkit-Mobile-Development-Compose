@@ -12,6 +12,8 @@ class ViewModelFactory : ViewModelProvider.NewInstanceFactory() {
             return ScanViewModel(DependencyInjector.provideRepostiory()) as T
         }else if(modelClass.isAssignableFrom(AuthViewModel::class.java)){
             return AuthViewModel(DependencyInjector.provideRepostiory()) as T
+        }else if(modelClass.isAssignableFrom(HomeViewModel::class.java)){
+            return HomeViewModel(DependencyInjector.provideRepostiory()) as T
         }
         throw IllegalArgumentException("Unknown view model")
     }

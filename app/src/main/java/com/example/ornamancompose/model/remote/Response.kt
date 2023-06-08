@@ -12,6 +12,23 @@ data class RegisterResponse(
 	val isActive : Boolean
 )
 
+data class PlantResponse(
+	@SerializedName("class_name")
+	val className : String,
+	@SerializedName("family_name")
+	val familyName : String,
+	@SerializedName("common_name")
+	val commonName : String,
+	@SerializedName("taxonomic_data_url")
+	val taxonomicDataUrl : String,
+	val location : String,
+	val description : String,
+	@SerializedName("date_posted")
+	val datePosted : String,
+	@SerializedName("image_url")
+	val imgUrl : String
+)
+
 data class DummyPlantResponse(
 	val title : String,
 	val quickDescription : String,

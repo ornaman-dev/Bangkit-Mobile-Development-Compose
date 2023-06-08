@@ -2,6 +2,7 @@ package com.example.ornamancompose.model.remote
 
 import LoginResponse
 import NearbySearchResponse
+import PlantResponse
 import PlantScanResponse
 import RegisterResponse
 import com.example.ornamancompose.BuildConfig
@@ -44,6 +45,9 @@ interface ApiService{
     suspend fun register(
         @Body body : RegisterRequestBody
     ) : Response<RegisterResponse>
+
+    @GET("${BuildConfig.TEMP_BASE_API}plants/all")
+    suspend fun getAllPlants() : Response<List<PlantResponse>>
 
 }
 

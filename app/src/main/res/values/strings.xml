@@ -6,7 +6,7 @@
     <string name="action_upload_from_gallery">Upload from gallery</string>
     <string name="action_take_a_picture">Take a picture</string>
     <string name="plant_name">Nama tanaman : <b>%s</b></string>
-    <string name="confidence_prediction">Confidence : %.3f</string>
+    <string name="confidence_prediction">Confidence : %.3f%</string>
     <string name="username_placeholder">Username</string>
     <string name="password_placeholder">Password</string>
     <string name="name_placeholder">Name</string>
@@ -26,4 +26,6 @@
     <string name="nearby_plant_store">Toko perlengkapan tanaman di sekitar</string>
     <string name="permission_not_granted">Permisison should be granted</string>
     <string name="username_or_password_empty">Username or password cannot be empty</string>
+    <string name="familiy_name">Family name : %s</string>
+    <string name="common_name_and_class_name">%1$s (<i>%2$s</i>)</string>
 </resources>

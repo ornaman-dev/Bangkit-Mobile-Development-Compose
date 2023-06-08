@@ -2,15 +2,12 @@ package com.example.ornamancompose.repository
 
 
 import LoginResponse
-import NearbySearchResponse
-import PhotosItem
+import PlantResponse
 import PlantScanResponse
 import ResultsItem
 import android.util.Log
 import com.example.ornamancompose.BuildConfig
 import com.example.ornamancompose.model.remote.ApiService
-import com.example.ornamancompose.util.roundToDecimalPlace
-import com.google.gson.JsonObject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import okhttp3.MediaType.Companion.toMediaType
@@ -125,8 +122,20 @@ class Repository(private val apiService: ApiService) {
         }
     }
 
-    private fun setPhotoReference(reference : String) : String{
-        return BuildConfig.GOOGLE_MAPS_BASE_API + "photo?maxwidth=400&photo_reference=$reference&key=${BuildConfig.GOOGLE_MAPS_API_KEY}"
+    fun getAllPlants() : Flow<UiState<List<PlantResponse>>> = flow{
+        try {
+            val response = apiService.getAllPlants()
+            val responseBody = response.body()
+            if(response.isSuccessful && responseBody != null){
+                emit(UiState.Success(responseBody))
+            }else{
+                emit(UiState.Error(response.message(), response.code()))
+            }
+        }catch (e : HttpException){
+            emit(UiState.Error(e.message(), e.code()))
+        }catch (e : Exception){
+            emit(UiState.Exception(e.message.toString()))
+        }
     }
 
 }

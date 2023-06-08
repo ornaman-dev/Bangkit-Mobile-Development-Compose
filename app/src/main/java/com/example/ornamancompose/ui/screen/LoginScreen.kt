@@ -60,9 +60,6 @@ fun LoginScreen(
     }
     val context = LocalContext.current
     val loginState by viewModel.loginStateFlow.collectAsState()
-    var requestCounter by rememberSaveable{
-        mutableStateOf(0)
-    }
 
     LaunchedEffect(loginState){
         Log.i("LOGIN-TAG", "$loginState")
