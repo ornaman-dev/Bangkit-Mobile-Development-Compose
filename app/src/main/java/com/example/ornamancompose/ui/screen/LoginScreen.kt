@@ -120,11 +120,7 @@ fun LoginScreen(
                     .fillMaxWidth()
             )
             InputText(
-                placeholder = stringResource(R.string.username_placeholder),
-                errorRule = {text ->
-                    text.length < 8 && text.isNotEmpty()
-                },
-                errorMessage = stringResource(R.string.username_error_message),
+                placeholder = stringResource(R.string.email_placeholder),
                 onValueChanged = { newValue ->
                     username = newValue
                 },
@@ -150,7 +146,7 @@ fun LoginScreen(
                         .fillMaxWidth(),
                     onClick = {
                         if(username.isNotEmpty() && password.isNotEmpty()){
-                            viewModel.login(username, password)
+                            viewModel.login(username.trim(), password.trim())
                         }else{
                             showToast(context, context.getString(R.string.username_or_password_empty))
                         }

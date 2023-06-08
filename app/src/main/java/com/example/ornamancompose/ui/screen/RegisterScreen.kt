@@ -37,6 +37,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.ornamancompose.repository.UiState
 import com.example.ornamancompose.ui.component.InputText
 import com.example.ornamancompose.ui.component.ProgressBar
+import com.example.ornamancompose.util.isEmailValid
 import com.example.ornamancompose.util.showToast
 import com.example.ornamancompose.viewmodel.AuthViewModel
 import com.example.ornamancompose.viewmodel.ViewModelFactory
@@ -55,31 +56,29 @@ fun RegisterScreen(
     var password by remember{
         mutableStateOf("")
     }
-    var name by remember{
+    var email by remember{
         mutableStateOf("")
     }
     var isLoading by remember{
         mutableStateOf(false)
     }
-    var requestCounter by rememberSaveable{
-        mutableStateOf(0)
-    }
+
     val context = LocalContext.current
     val registerState by viewModel.registerStateFlow.collectAsState()
 
-    LaunchedEffect(requestCounter){
-        when(registerState){
+    LaunchedEffect(registerState){
+        when(val state = registerState){
             is UiState.Loading -> isLoading = true
             is UiState.Error -> {
                 isLoading = false
-                showToast(context, "${(registerState as UiState.Error).code} \\t message : ${(registerState as UiState.Error).message}\"")
+                showToast(context, "${state.code} \\t message : ${state.message}\"")
             }
             is UiState.Exception -> {
                 isLoading = false
-                showToast(context, (registerState as UiState.Exception).message)
+                showToast(context, state.message)
             }
             is UiState.Success -> {
-                if((registerState as UiState.Success).data){
+                if(state.data.username.isNotEmpty()){
                     onSuccessRegister()
                 }
             }
@@ -127,22 +126,22 @@ fun RegisterScreen(
                     .fillMaxWidth()
             )
             InputText(
-                placeholder = stringResource(R.string.name_placeholder),
-                onValueChanged = {newValue ->
-                    name = newValue
-                },
-                text = name
-            )
-            InputText(
                 placeholder = stringResource(R.string.username_placeholder),
-                errorRule = {text ->
-                    text.length < 8 && text.isNotEmpty()
-                },
-                errorMessage = stringResource(R.string.username_error_message),
                 onValueChanged = {newValue ->
                     username = newValue
                 },
                 text = username
+            )
+            InputText(
+                placeholder = stringResource(R.string.email_placeholder),
+                errorRule = {text ->
+                    !isEmailValid(text) && email.isNotEmpty()
+                },
+                errorMessage = stringResource(R.string.email_error_message),
+                onValueChanged = {newValue ->
+                    email = newValue
+                },
+                text = email
             )
             InputText(
                 placeholder = stringResource(R.string.password_placeholder),
@@ -167,8 +166,11 @@ fun RegisterScreen(
                     modifier = Modifier
                         .fillMaxWidth(),
                     onClick = {
-                        viewModel.register(name, username, password)
-                        requestCounter++
+                        if(email.isNotEmpty() && username.isNotEmpty() && password.isNotEmpty()){
+                            viewModel.register(username.trim(), email.trim(), password.trim())
+                        }else{
+                            showToast(context, context.getString(R.string.field_empty))
+                        }
                     }
                 )
             }

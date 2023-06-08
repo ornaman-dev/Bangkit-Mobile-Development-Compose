@@ -105,7 +105,7 @@ fun OrnamanApp() {
         NavHost(
             navController = navController,
             // Got to check if the user already logged in, by changing the start destination to home_screen if yes and auth_screen otherwise
-            startDestination = "home_screen"
+            startDestination = "auth_screen"
         ){
             navigation(
                 route = "home_screen",

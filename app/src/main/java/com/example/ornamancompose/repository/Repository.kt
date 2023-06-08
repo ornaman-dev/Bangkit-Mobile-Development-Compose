@@ -4,10 +4,12 @@ package com.example.ornamancompose.repository
 import LoginResponse
 import PlantResponse
 import PlantScanResponse
+import RegisterResponse
 import ResultsItem
 import android.util.Log
 import com.example.ornamancompose.BuildConfig
 import com.example.ornamancompose.model.remote.ApiService
+import com.example.ornamancompose.model.remote.RegisterRequestBody
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import okhttp3.MediaType.Companion.toMediaType
@@ -80,6 +82,28 @@ class Repository(private val apiService: ApiService) {
             emit(UiState.Success(loginStatus))
         }else{
             emit(UiState.Error("Unnable to login", 400))
+        }
+    }
+
+    fun register(username : String, email: String, password: String) : Flow<UiState<RegisterResponse>> = flow{
+        emit(UiState.Loading)
+        try{
+            val body = RegisterRequestBody(
+                username = username,
+                email = email,
+                password = password
+            )
+            val response = apiService.register(body)
+            val responseBody = response.body()
+            if(response.isSuccessful && responseBody != null){
+                emit(UiState.Success(responseBody))
+            }else{
+                emit(UiState.Error(response.message(), response.code()))
+            }
+        }catch (e : HttpException){
+            emit(UiState.Error(e.message(), e.code()))
+        }catch (e : Exception){
+            emit(UiState.Exception(e.message.toString()))
         }
     }
 

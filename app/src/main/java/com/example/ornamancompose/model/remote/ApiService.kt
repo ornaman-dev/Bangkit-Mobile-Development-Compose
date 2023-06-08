@@ -41,7 +41,7 @@ interface ApiService{
         @FieldMap field : MutableMap<String, Any>
     ) : Response<LoginResponse>
 
-    @POST("${BuildConfig.TEMP_BASE_API}users")
+    @POST("${BuildConfig.TEMP_BASE_API}users/")
     suspend fun register(
         @Body body : RegisterRequestBody
     ) : Response<RegisterResponse>

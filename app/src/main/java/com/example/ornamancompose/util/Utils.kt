@@ -18,6 +18,11 @@ import java.text.SimpleDateFormat
 import java.util.Date
 
 
+fun isEmailValid(email : String) : Boolean{
+    val emailPattern = "[a-zA-Z\\d._-]+@[a-z]+\\.+[a-z]+".toRegex()
+    return email.matches(emailPattern)
+}
+
 fun styleStringResource(text : String) : String{
     val styledText = Html.fromHtml(text, FROM_HTML_MODE_LEGACY)
     return styledText.toString()
