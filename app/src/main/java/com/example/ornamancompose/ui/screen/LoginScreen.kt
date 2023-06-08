@@ -132,11 +132,7 @@ fun LoginScreen(
             )
             InputText(
                 placeholder = stringResource(R.string.password_placeholder),
-                errorRule = {text ->
-                    text.length < 8 && text.isNotEmpty()
-                },
                 visualTransformation = PasswordVisualTransformation(),
-                errorMessage = stringResource(R.string.password_error_message),
                 modifier = Modifier
                     .padding(bottom = 50.dp),
                 onValueChanged = {newValue ->
