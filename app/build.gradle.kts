@@ -92,4 +92,7 @@ dependencies {
     // Location
     implementation("com.google.android.gms:play-services-location:18.0.0")
 
+    // Data store
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+
 }
