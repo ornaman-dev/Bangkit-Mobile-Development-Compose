@@ -1,28 +1,32 @@
 package com.example.ornamancompose.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.ornamancompose.di.DependencyInjector
+import com.example.ornamancompose.repository.Repository
 
 @Suppress("UNCHECKED_CAST")
-class ViewModelFactory : ViewModelProvider.NewInstanceFactory() {
+class ViewModelFactory private constructor(
+    private val repository: Repository
+): ViewModelProvider.NewInstanceFactory() {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if(modelClass.isAssignableFrom(ScanViewModel::class.java)){
-            return ScanViewModel(DependencyInjector.provideRepostiory()) as T
+            return ScanViewModel(repository) as T
         }else if(modelClass.isAssignableFrom(AuthViewModel::class.java)){
-            return AuthViewModel(DependencyInjector.provideRepostiory()) as T
+            return AuthViewModel(repository) as T
         }else if(modelClass.isAssignableFrom(HomeViewModel::class.java)){
-            return HomeViewModel(DependencyInjector.provideRepostiory()) as T
+            return HomeViewModel(repository) as T
         }
         throw IllegalArgumentException("Unknown view model")
     }
 
     companion object{
         private var INSTANCE : ViewModelFactory? = null
-        fun getInstance() : ViewModelFactory{
+        fun getInstance(context: Context) : ViewModelFactory{
             if(INSTANCE == null){
-                INSTANCE = ViewModelFactory()
+                INSTANCE = ViewModelFactory(DependencyInjector.provideRepository(context))
             }
             return INSTANCE!!
         }

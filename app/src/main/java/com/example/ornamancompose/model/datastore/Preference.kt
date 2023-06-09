@@ -23,7 +23,7 @@ class AuthPreferences private constructor(private val dataStore : DataStore<Pref
     private val USERNAME_KEY = stringPreferencesKey("username")
     private val EMAIL_KEY = stringPreferencesKey("email")
 
-    fun getThemeSetting() : Flow<User>{
+    fun getUserSession() : Flow<User>{
         return dataStore.data.map { preference ->
             User(
                 username = preference[USERNAME_KEY] ?: "",
@@ -39,6 +39,10 @@ class AuthPreferences private constructor(private val dataStore : DataStore<Pref
             preference[USERNAME_KEY] = user.username
             preference[EMAIL_KEY] = user.email
         }
+    }
+
+    suspend fun clearSession() = dataStore.edit { preference ->
+        preference.clear()
     }
 
     companion object{

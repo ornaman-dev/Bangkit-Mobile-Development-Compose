@@ -197,14 +197,14 @@ fun RegisterScreen(
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun RegisterScreen() {
-    OrnamanComposeTheme {
-        RegisterScreen(
-            modifier = Modifier
-                .fillMaxSize(),
-            viewModel = viewModel<AuthViewModel>(factory = ViewModelFactory.getInstance())
-        )
-    }
-}
+//@Preview(showBackground = true, showSystemUi = true)
+//@Composable
+//fun RegisterScreen() {
+//    OrnamanComposeTheme {
+//        RegisterScreen(
+//            modifier = Modifier
+//                .fillMaxSize(),
+//            viewModel = viewModel<AuthViewModel>(factory = ViewModelFactory.getInstance())
+//        )
+//    }
+//}

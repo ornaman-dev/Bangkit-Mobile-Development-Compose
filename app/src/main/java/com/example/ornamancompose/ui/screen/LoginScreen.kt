@@ -176,14 +176,14 @@ fun LoginScreen(
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun LoginScreenPreview() {
-    OrnamanComposeTheme {
-        LoginScreen(
-            modifier = Modifier.fillMaxSize(),
-            viewModel = viewModel<AuthViewModel>(factory = ViewModelFactory.getInstance())
-        )
-    }
-}
+//@Preview(showBackground = true, showSystemUi = true)
+//@Composable
+//fun LoginScreenPreview() {
+//    OrnamanComposeTheme {
+//        LoginScreen(
+//            modifier = Modifier.fillMaxSize(),
+//            viewModel = viewModel<AuthViewModel>(factory = ViewModelFactory.getInstance())
+//        )
+//    }
+//}
 

@@ -2,6 +2,7 @@ package com.example.ornamancompose
 
 import PlantScanResponse
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,14 +13,13 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavArgs
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -30,7 +30,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.compose.OrnamanComposeTheme
 import com.example.ornamancompose.ui.component.BottomNav
-import com.example.ornamancompose.ui.component.InputText
 import com.example.ornamancompose.ui.navigation.Screen
 import com.example.ornamancompose.ui.screen.HomeScreen
 import com.example.ornamancompose.ui.screen.LoginScreen
@@ -38,23 +37,26 @@ import com.example.ornamancompose.ui.screen.ProfileScreen
 import com.example.ornamancompose.ui.screen.RegisterScreen
 import com.example.ornamancompose.ui.screen.ScanResultScreen
 import com.example.ornamancompose.ui.screen.ScanScreen
-import com.example.ornamancompose.ui.screen.dummyResultsItem
 import com.example.ornamancompose.util.decodeStringUrl
 import com.example.ornamancompose.viewmodel.AuthViewModel
+import com.example.ornamancompose.viewmodel.HomeViewModel
 import com.example.ornamancompose.viewmodel.ScanViewModel
 import com.example.ornamancompose.viewmodel.ViewModelFactory
 
 class MainActivity : ComponentActivity() {
+    private lateinit var token : String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            token = intent.getStringExtra("token") ?: ""
+            Log.i("MainActivity-TAG", token)
             OrnamanComposeTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    OrnamanApp()
+                    OrnamanApp(token)
                 }
             }
         }
@@ -63,17 +65,25 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OrnamanApp() {
+fun OrnamanApp(
+    token : String
+) {
    val navController = rememberNavController()
    val navBackStackEntry by navController.currentBackStackEntryAsState()
    val currentRoute = navBackStackEntry?.destination?.route
+   val context = LocalContext.current
 
    val authViewModel : AuthViewModel = viewModel(
-       factory = ViewModelFactory.getInstance()
+       factory = ViewModelFactory.getInstance(context)
    )
    val scanViewModel : ScanViewModel = viewModel(
-       factory = ViewModelFactory.getInstance()
+       factory = ViewModelFactory.getInstance(context)
    )
+   val homeViewModel : HomeViewModel = viewModel(
+       factory = ViewModelFactory.getInstance(context)
+   )
+
+   val startDestination = if(token.isEmpty()) "auth_screen" else "home_screen"
 
     Scaffold(
         bottomBar = {
@@ -106,7 +116,7 @@ fun OrnamanApp() {
         NavHost(
             navController = navController,
             // Got to check if the user already logged in, by changing the start destination to home_screen if yes and auth_screen otherwise
-            startDestination = "home_screen"
+            startDestination = startDestination
         ){
             navigation(
                 route = "home_screen",
@@ -118,7 +128,8 @@ fun OrnamanApp() {
                     HomeScreen(
                         modifier = Modifier
                             .padding(innerPadding)
-                            .fillMaxSize()
+                            .fillMaxSize(),
+                        viewModel = homeViewModel
                     )
                 }
                 composable(
@@ -140,7 +151,15 @@ fun OrnamanApp() {
                     ProfileScreen(
                         modifier = Modifier
                             .padding(15.dp)
-                            .fillMaxSize()
+                            .fillMaxSize(),
+                        onLogout = {
+                            authViewModel.clearSession()
+                            navController.navigate("auth_screen"){
+                                popUpTo("home_screen"){
+                                    inclusive = true
+                                }
+                            }
+                        }
                     )
                 }
                 composable(
@@ -239,6 +258,6 @@ fun OrnamanApp() {
 @Composable
 fun OrnamanAppPreview() {
     OrnamanComposeTheme {
-        OrnamanApp()
+        OrnamanApp("")
     }
 }

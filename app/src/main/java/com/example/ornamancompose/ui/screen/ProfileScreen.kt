@@ -25,13 +25,15 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.compose.OrnamanComposeTheme
 import com.example.ornamancompose.R
 import com.example.ornamancompose.ui.component.ProfileCardMenu
 
 @Composable
 fun ProfileScreen(
-    modifier : Modifier = Modifier
+    modifier : Modifier = Modifier,
+    onLogout : () -> Unit
 ) {
     val context = LocalContext.current
     Column(
@@ -90,9 +92,7 @@ fun ProfileScreen(
             title = stringResource(R.string.logout),
             color = MaterialTheme.colorScheme.error,
             icon = painterResource(R.drawable.ic_exit),
-            onClick = {
-                //Todo(logout process here)
-            }
+            onClick = onLogout
         )
     }
 }

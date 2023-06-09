@@ -28,12 +28,9 @@ import com.example.ornamancompose.viewmodel.ViewModelFactory
 
 @Composable
 fun HomeScreen(
-    modifier : Modifier = Modifier
+    modifier : Modifier = Modifier,
+    viewModel : HomeViewModel
 ) {
-
-    val viewModel : HomeViewModel = viewModel(
-        factory = ViewModelFactory.getInstance()
-    )
 
     val allPlantsState by viewModel.allPlants.collectAsState()
     val context = LocalContext.current

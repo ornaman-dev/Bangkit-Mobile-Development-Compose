@@ -36,7 +36,7 @@ fun ProfileCardMenu(
     icon : Painter = painterResource(R.drawable.ic_arrow_right),
     onClick : () -> Unit
 ) {
-    val shape = RoundedCornerShape(8.dp)
+     val shape = RoundedCornerShape(8.dp)
         Row(
             modifier = modifier
                 .border(1.dp, color, shape)

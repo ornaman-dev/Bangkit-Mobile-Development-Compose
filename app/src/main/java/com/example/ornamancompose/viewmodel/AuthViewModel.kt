@@ -27,6 +27,7 @@ class AuthViewModel(private val repository: Repository) : ViewModel() {
     private val _mutableRegisterStateFlow = MutableStateFlow<UiState<RegisterResponse>>(UiState.Success(initialRegisterResponse))
     val registerStateFlow : StateFlow<UiState<RegisterResponse>> get() = _mutableRegisterStateFlow
 
+
     fun login(email : String, password : String) = viewModelScope.launch {
         repository.login(email, password)
             .catch {
@@ -45,6 +46,11 @@ class AuthViewModel(private val repository: Repository) : ViewModel() {
             .collect{uiState ->
                 _mutableRegisterStateFlow.value = uiState
             }
+    }
+
+    fun getUserSession() = repository.getUserSession()
+    fun clearSession() = viewModelScope.launch {
+        repository.clearSession()
     }
 
 }
