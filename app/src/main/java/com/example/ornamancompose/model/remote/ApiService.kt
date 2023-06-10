@@ -2,6 +2,7 @@ package com.example.ornamancompose.model.remote
 
 import LoginResponse
 import NearbySearchResponse
+import PlantDetailResponse
 import PlantResponse
 import PlantScanResponse
 import RegisterResponse
@@ -19,6 +20,7 @@ import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
+import retrofit2.http.Query
 import retrofit2.http.QueryMap
 import java.util.concurrent.TimeUnit
 
@@ -48,6 +50,11 @@ interface ApiService{
 
     @GET("${BuildConfig.PLANT_BASE_API}plants")
     suspend fun getAllPlants() : Response<List<PlantResponse>>
+
+    @GET("${BuildConfig.PLANT_BASE_API}plant")
+    suspend fun getDetailPlant(
+        @Query("id") id : String
+    ) : Response<PlantDetailResponse>
 
 }
 

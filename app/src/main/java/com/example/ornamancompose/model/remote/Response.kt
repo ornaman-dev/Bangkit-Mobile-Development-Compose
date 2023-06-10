@@ -12,6 +12,24 @@ data class RegisterResponse(
 	val isActive : Boolean
 )
 
+data class PlantDetailResponse(
+	val id : String,
+	val name : String,
+	@SerializedName("name_alt")
+	val altName: String,
+	@SerializedName("image")
+	val imgUrl: String,
+	val desc: String,
+	val light : String,
+	val water : String,
+	val humidity : String,
+	val temperature : String,
+	val food : String,
+	val toxicity : String,
+	val cares : String,
+	val fact : String
+)
+
 data class PlantResponse(
 	val id : String,
 	val name : String,

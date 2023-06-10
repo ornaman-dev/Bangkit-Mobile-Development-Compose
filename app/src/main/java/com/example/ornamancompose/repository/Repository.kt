@@ -2,6 +2,7 @@ package com.example.ornamancompose.repository
 
 
 import LoginResponse
+import PlantDetailResponse
 import PlantResponse
 import PlantScanResponse
 import RegisterResponse
@@ -90,16 +91,6 @@ class Repository(
         }
     }
 
-    fun dummyLogin(username : String, password : String) : Flow<UiState<Boolean>> = flow {
-        emit(UiState.Loading)
-        val loginStatus = username == "jokohartono12" && password == "jokohartono12"
-        if(loginStatus){
-            emit(UiState.Success(loginStatus))
-        }else{
-            emit(UiState.Error("Unnable to login", 400))
-        }
-    }
-
     fun register(username : String, email: String, password: String) : Flow<UiState<RegisterResponse>> = flow{
         emit(UiState.Loading)
         try{
@@ -121,18 +112,6 @@ class Repository(
             emit(UiState.Exception(e.message.toString()))
         }
     }
-
-    fun dummyRegister(name : String, username: String, password: String) : Flow<UiState<Boolean>> = flow{
-        emit(UiState.Loading)
-        val loginStatus = username.length >= 8 && password.length >= 8
-        if(loginStatus){
-            emit(UiState.Success(loginStatus))
-        }else{
-            emit(UiState.Error("Unnable to register", 400))
-        }
-    }
-
-    //Todo(the nearby search place is succeeded but provide an empty list of result, test all of the query below in postman to debug it)
     fun searchNearbyStore(lat : String, long : String) : Flow<UiState<List<ResultsItem>>> = flow {
         val request = mutableMapOf<String, Any>()
         request["keyword"] = "toko pupuk|toko perlengkapan tanaman|toko perlengkapan kebun"
@@ -171,6 +150,22 @@ class Repository(
                 emit(UiState.Error(response.message(), response.code()))
             }
         }catch (e : HttpException){
+            emit(UiState.Error(e.message(), e.code()))
+        }catch (e : Exception){
+            emit(UiState.Exception(e.message.toString()))
+        }
+    }
+
+    fun getDetailPlant(id : String) : Flow<UiState<PlantDetailResponse>> = flow {
+        try{
+            val response = apiService.getDetailPlant(id)
+            val responseBody = response.body()
+            if(response.isSuccessful && responseBody != null){
+                emit(UiState.Success(responseBody))
+            }else{
+                emit(UiState.Error(response.message(), response.code()))
+            }
+        }catch (e :HttpException){
             emit(UiState.Error(e.message(), e.code()))
         }catch (e : Exception){
             emit(UiState.Exception(e.message.toString()))

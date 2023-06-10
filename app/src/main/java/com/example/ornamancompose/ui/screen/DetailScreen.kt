@@ -18,7 +18,7 @@ import com.example.ornamancompose.R
 fun DetailScreen(
     modifier : Modifier = Modifier
 ) {
-
+    // Todo(need to pass id to make a detail plant request here, don't forget to wrap it inside a side-effect handler)
 }
 
 @Composable
