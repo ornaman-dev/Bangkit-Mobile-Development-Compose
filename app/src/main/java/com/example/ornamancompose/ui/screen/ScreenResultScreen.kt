@@ -31,6 +31,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -82,14 +83,6 @@ fun ScanResultScreen(
             textAlign = TextAlign.Center
         )
         Text(
-            text = stringResource(R.string.confidence_prediction, scanResult.confidence),
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier
-                .padding(top = 15.dp)
-                .fillMaxWidth(),
-            textAlign = TextAlign.Center
-        )
-        Text(
             text = scanResult.description,
             style = MaterialTheme.typography.bodySmall,
             modifier = Modifier
@@ -100,7 +93,9 @@ fun ScanResultScreen(
         )
         Text(
             text = stringResource(R.string.nearby_plant_store),
-            style = MaterialTheme.typography.bodyMedium,
+            style = MaterialTheme.typography.bodyMedium.copy(
+                fontWeight = FontWeight(700)
+            ),
             modifier = Modifier
                 .padding(top = 15.dp)
                 .fillMaxWidth()
@@ -144,8 +139,18 @@ fun ListRecommendationStore(
         horizontalArrangement = Arrangement.spacedBy(20.dp),
         modifier = modifier
     ){
-        items(data){ item ->
-            StoreCard(data = item)
+        Log.i("ScreenResult-TAG", "$data")
+        if(data.isEmpty()){
+            item {
+                Text(
+                    text = stringResource(R.string.no_nearby_store_found),
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+        }else{
+            items(data){ item ->
+                StoreCard(data = item)
+            }
         }
     }
 }

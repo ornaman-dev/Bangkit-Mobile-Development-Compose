@@ -100,32 +100,25 @@ fun HomeScreenPreview() {
 
 private val dummyData = listOf(
     PlantResponse(
-        className = "Agglonema",
-        description = "Sample quick description Sample quick description Sample quick description Sample quick description",
+        altName = "Agglonema",
+        desc = "Sample quick description Sample quick description Sample quick description Sample quick description",
         imgUrl = "",
-        familyName = "Sample family name",
-        location = "",
-        taxonomicDataUrl = "",
-        datePosted = "",
-        commonName = "Anggrek"
+        name = "Sample family name",
+        id = ""
+    ),
+
+    PlantResponse(
+        altName = "Agglonema",
+        desc = "Sample quick description Sample quick description Sample quick description Sample quick description",
+        imgUrl = "",
+        name = "Sample family name",
+        id = ""
     ),
     PlantResponse(
-        className = "Agglonema",
-        description = "Sample quick description Sample quick description Sample quick description Sample quick description",
+        altName = "Agglonema",
+        desc = "Sample quick description Sample quick description Sample quick description Sample quick description",
         imgUrl = "",
-        familyName = "Sample family name",
-        location = "",
-        taxonomicDataUrl = "",
-        datePosted = "",
-        commonName = "Anggrek"
-    ),PlantResponse(
-        className = "Agglonema",
-        description = "Sample quick description Sample quick description Sample quick description Sample quick description",
-        imgUrl = "",
-        familyName = "Sample family name",
-        location = "",
-        taxonomicDataUrl = "",
-        datePosted = "",
-        commonName = "Anggrek"
+        name = "Sample family name",
+        id = ""
     )
 )

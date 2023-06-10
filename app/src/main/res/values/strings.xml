@@ -5,8 +5,8 @@
     <string name="profile_bottom_nav_menu">Profile</string>
     <string name="action_upload_from_gallery">Upload from gallery</string>
     <string name="action_take_a_picture">Take a picture</string>
-    <string name="plant_name">Nama tanaman : <b>%s</b></string>
-    <string name="confidence_prediction">Confidence : %.3f%</string>
+    <string name="plant_name">Plant name : <b>%s</b></string>
+    <string name="confidence_prediction">Confidence : %.3f%%</string>
     <string name="username_placeholder">Username</string>
     <string name="password_placeholder">Password</string>
     <string name="email_placeholder">Email</string>
@@ -33,4 +33,5 @@
     <string name="logout">Logout</string>
     <string name="language">Language</string>
     <string name="account">Account</string>
+    <string name="no_nearby_store_found">No nearby store found</string>
 </resources>

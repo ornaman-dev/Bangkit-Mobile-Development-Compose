@@ -41,15 +41,16 @@ fun StoreCard(
     modifier : Modifier = Modifier,
     data : ResultsItem
 ) {
+
     val context = LocalContext.current
+    val isStoreOpen = data.openingHours?.openNow ?: false
     OutlinedCard(
         modifier = modifier
             .width(200.dp)
             .wrapContentHeight(),
         shape = RoundedCornerShape(5.dp),
         onClick = {
-            val location = data.geometry.location
-            intentToGoogleMap(context, location.lat, location.lng)
+            intentToGoogleMap(context, data)
         }
     ) {
         Image(
@@ -93,7 +94,7 @@ fun StoreCard(
             )
             Row {
                 Text(
-                    text = if(data.openingHours.openNow)"Buka" else "Tutup",
+                    text = if(isStoreOpen)"Buka" else "Tutup",
                     style = TextStyle(
                         fontFamily = Poppins,
                         fontWeight = FontWeight(700),
@@ -125,8 +126,9 @@ fun StoreCard(
     }
 }
 
-private fun intentToGoogleMap(context : Context, lat : Double, long : Double){
-    val gmmIntentUri = Uri.parse("geo:$lat,$long")
+private fun intentToGoogleMap(context : Context, data : ResultsItem){
+    val location = data.geometry.location
+    val gmmIntentUri = Uri.parse("geo:${location.lat},${location.lng}?q=${location.lat},${location.lng}(${data.name})")
     val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
     mapIntent.resolveActivity(context.packageManager)?.let{
         context.startActivity(mapIntent)
@@ -136,7 +138,7 @@ private fun intentToGoogleMap(context : Context, lat : Double, long : Double){
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
-fun StoreCardPreview() {
+fun StoreCardPreview() {    
 //    Scaffold {paddingValues ->
 //        StoreCard(
 //            modifier = Modifier

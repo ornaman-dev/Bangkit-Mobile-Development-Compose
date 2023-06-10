@@ -13,20 +13,13 @@ data class RegisterResponse(
 )
 
 data class PlantResponse(
-	@SerializedName("class_name")
-	val className : String,
-	@SerializedName("family_name")
-	val familyName : String,
-	@SerializedName("common_name")
-	val commonName : String,
-	@SerializedName("taxonomic_data_url")
-	val taxonomicDataUrl : String,
-	val location : String,
-	val description : String,
-	@SerializedName("date_posted")
-	val datePosted : String,
-	@SerializedName("image_url")
-	val imgUrl : String
+	val id : String,
+	val name : String,
+	@SerializedName("name_alt")
+	val altName : String,
+	@SerializedName("image")
+	val imgUrl : String,
+	val desc : String
 )
 
 data class DummyPlantResponse(
@@ -87,7 +80,7 @@ data class ResultsItem(
 	val name: String,
 
 	@field:SerializedName("opening_hours")
-	val openingHours: OpeningHours,
+	val openingHours: OpeningHours? = null,
 
 	@field:SerializedName("geometry")
 	val geometry: Geometry,
@@ -98,7 +91,7 @@ data class ResultsItem(
 
 data class OpeningHours(
 	@field:SerializedName("open_now")
-	val openNow: Boolean
+	val openNow: Boolean = false
 )
 
 data class Geometry(

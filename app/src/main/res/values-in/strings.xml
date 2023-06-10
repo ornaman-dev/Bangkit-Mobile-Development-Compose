@@ -7,7 +7,7 @@
     <string name="action_upload_from_gallery">Unggah dari galeri</string>
     <string name="action_take_a_picture">Ambil gambar</string>
     <string name="plant_name">Nama tanaman: <b>%s</b></string>
-    <string name="confidence_prediction">Akurasi: %.3f%</string>
+    <string name="confidence_prediction">Akurasi: %.3f%%</string>
     <string name="username_placeholder">Nama Pengguna</string>
     <string name="password_placeholder">Kata Sandi</string>
     <string name="email_placeholder">Email</string>
@@ -34,4 +34,5 @@
     <string name="logout">Keluar</string>
     <string name="language">Bahasa</string>
     <string name="account">Akun</string>
+    <string name="no_nearby_store_found">Tidak ada toko terdekat ditemukan</string>
 </resources>

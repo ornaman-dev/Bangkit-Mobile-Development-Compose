@@ -55,7 +55,7 @@ fun PlantCard(
             verticalArrangement = Arrangement.spacedBy(7.dp)
         ) {
             Text(
-                text = styleStringResource(stringResource(R.string.common_name_and_class_name, data.commonName, data.className)),
+                text = styleStringResource(stringResource(R.string.common_name_and_class_name, data.altName, data.name)),
                 style = MaterialTheme.typography.bodyMedium.copy(
                     fontWeight = FontWeight.Bold
                 ),
@@ -65,15 +65,7 @@ fun PlantCard(
                 overflow = TextOverflow.Ellipsis
             )
             Text(
-                text = stringResource(R.string.familiy_name, data.familyName),
-                style = MaterialTheme.typography.bodySmall,
-                modifier = Modifier
-                    .fillMaxWidth(),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-            Text(
-                text = data.description,
+                text = data.desc,
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier
                     .fillMaxWidth(),
@@ -97,14 +89,11 @@ fun PlantCardPreview() {
                 modifier = Modifier
                     .fillMaxWidth(),
                 data = PlantResponse(
-                    className = "Agglonema",
-                    description = "Sample quick description Sample quick description Sample quick description Sample quick description",
+                    altName = "Agglonema",
+                    desc = "Sample quick description Sample quick description Sample quick description Sample quick description",
                     imgUrl = "",
-                    familyName = "Sample family name",
-                    location = "",
-                    taxonomicDataUrl = "",
-                    datePosted = "",
-                    commonName = "Anggrek"
+                    name = "Sample family name",
+                    id = ""
                 )
             )
         }

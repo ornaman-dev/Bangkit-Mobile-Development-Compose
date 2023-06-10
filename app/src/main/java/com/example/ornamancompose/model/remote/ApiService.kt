@@ -46,7 +46,7 @@ interface ApiService{
         @Body body : RegisterRequestBody
     ) : Response<RegisterResponse>
 
-    @GET("${BuildConfig.TEMP_BASE_API}plants/all")
+    @GET("${BuildConfig.PLANT_BASE_API}plants")
     suspend fun getAllPlants() : Response<List<PlantResponse>>
 
 }
@@ -56,8 +56,8 @@ class ApiConfig{
         private val loggingInterceptor = HttpLoggingInterceptor()
             .setLevel(HttpLoggingInterceptor.Level.BODY)
         private val client = OkHttpClient.Builder()
-            .readTimeout(40, TimeUnit.SECONDS)
-            .connectTimeout(40, TimeUnit.SECONDS)
+            .readTimeout(60, TimeUnit.SECONDS)
+            .connectTimeout(60, TimeUnit.SECONDS)
             .addInterceptor(loggingInterceptor)
             .build()
         private val retrofit = Retrofit.Builder()
