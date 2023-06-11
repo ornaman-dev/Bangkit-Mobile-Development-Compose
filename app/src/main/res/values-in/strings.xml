@@ -35,4 +35,8 @@
     <string name="language">Bahasa</string>
     <string name="account">Akun</string>
     <string name="no_nearby_store_found">Tidak ada toko terdekat ditemukan</string>
+    <string name="plant_saying">"Tanaman yang cantik adalah teman di sekitar rumah."</string>
+    <string name="random_plant_fact">Tanaman terkecil di dunia adalah watermeal, dengan diameter hanya sebesar 0.1mm.</string>
+    <string name="did_you_know">Apakah kamu tahu?</string>
+    <string name="plant_guide">Panduan tanaman</string>
 </resources>

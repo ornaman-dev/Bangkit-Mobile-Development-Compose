@@ -126,10 +126,9 @@ fun OrnamanApp(
                     route = Screen.Home.route
                 ){
                     HomeScreen(
+                        viewModel = homeViewModel,
                         modifier = Modifier
                             .padding(innerPadding)
-                            .fillMaxSize(),
-                        viewModel = homeViewModel
                     )
                 }
                 composable(
@@ -137,6 +136,7 @@ fun OrnamanApp(
                 ){
                     ScanScreen(
                         modifier = Modifier
+                            .padding(innerPadding)
                             .fillMaxSize(),
                         viewModel = scanViewModel
                     ){scanResult, lat, long ->

@@ -34,4 +34,8 @@
     <string name="language">Language</string>
     <string name="account">Account</string>
     <string name="no_nearby_store_found">No nearby store found</string>
+    <string name="plant_saying">"A beautiful plant is like having a friend around the house."</string>
+    <string name="random_plant_fact">The world\'s smallest flower is the watermeal, which measures just 0.1mm across.</string>
+    <string name="did_you_know">Did you know?</string>
+    <string name="plant_guide">Plant guide</string>
 </resources>
