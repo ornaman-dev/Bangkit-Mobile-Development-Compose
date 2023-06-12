@@ -37,25 +37,27 @@ import com.example.ornamancompose.ui.component.ProgressBar
 import com.example.ornamancompose.util.showToast
 import com.example.ornamancompose.viewmodel.HomeViewModel
 
+//@Composable
+//fun HomeScreen(
+//    modifier : Modifier = Modifier,
+//    viewModel : HomeViewModel,
+//    onClickPlantCard : (String) -> Unit
+//) {
+//
+//    PlantColumn(
+//        modifier = modifier
+//            .padding(start = 20.dp, end = 20.dp, top = 15.dp, bottom = 10.dp)
+//            .fillMaxSize(),
+//        viewModel = viewModel
+//    )
+//
+//}
+
 @Composable
 fun HomeScreen(
     modifier : Modifier = Modifier,
-    viewModel : HomeViewModel
-) {
-
-    PlantColumn(
-        modifier = modifier
-            .padding(start = 20.dp, end = 20.dp, top = 15.dp, bottom = 10.dp)
-            .fillMaxSize(),
-        viewModel = viewModel
-    )
-
-}
-
-@Composable
-fun PlantColumn(
-    modifier: Modifier = Modifier,
-    viewModel: HomeViewModel
+    viewModel : HomeViewModel,
+    onClickPlantCard : (String) -> Unit
 ) {
     val allPlantsState by viewModel.allPlants.collectAsState()
     val context = LocalContext.current
@@ -66,6 +68,8 @@ fun PlantColumn(
 
     Column(
         modifier = modifier
+            .padding(start = 20.dp, end = 20.dp, top = 15.dp, bottom = 10.dp)
+            .fillMaxSize()
             .verticalScroll(scrollState)
     ) {
         Box(
@@ -136,7 +140,8 @@ fun PlantColumn(
                             modifier = Modifier
                                 .padding(top = 10.dp)
                                 .fillMaxWidth(),
-                            data = state.data
+                            data = state.data,
+                            onClickPlantCard = onClickPlantCard
                         )
                     }
                 }
@@ -148,14 +153,17 @@ fun PlantColumn(
 @Composable
 fun ListPlantCard(
     modifier: Modifier = Modifier,
-    data : List<PlantResponse>
+    data : List<PlantResponse>,
+    onClickPlantCard: (String) -> Unit
 ) {
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(15.dp),
         modifier = modifier
     ){
         items(data){ item ->
-            PlantCard(data = item)
+            PlantCard(data = item){plantId ->
+                onClickPlantCard(plantId)
+            }
         }
     }
 }

@@ -4,6 +4,7 @@ import DummyPlantResponse
 import PlantResponse
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -42,14 +43,18 @@ import com.example.ornamancompose.util.styleStringResource
 @Composable
 fun PlantCard(
     modifier: Modifier = Modifier,
-    data : PlantResponse
+    data : PlantResponse,
+    onClick : (String) -> Unit
 ) {
     val shape = RoundedCornerShape(8.dp)
     Column(
         modifier = modifier
             .width(IntrinsicSize.Min)
-            .border(width = 1.2.dp, MaterialTheme.colorScheme.primary, shape)
+            .border(width = 1.dp, MaterialTheme.colorScheme.primary, shape)
             .clip(shape)
+            .clickable {
+                onClick(data.id)
+            }
     ) {
         AsyncImage(
             model = data.imgUrl,
@@ -69,8 +74,8 @@ fun PlantCard(
         ) {
             Text(
                 text = styleStringResource(stringResource(R.string.common_name_and_class_name, data.altName, data.name)),
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    fontWeight = FontWeight.Bold
+                style = MaterialTheme.typography.bodySmall.copy(
+                    fontWeight = FontWeight(700)
                 ),
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis
@@ -101,7 +106,7 @@ fun PlantCardPreview() {
                     name = "Sample family name",
                     id = ""
                 )
-            )
+            ){}
         }
     }
 }

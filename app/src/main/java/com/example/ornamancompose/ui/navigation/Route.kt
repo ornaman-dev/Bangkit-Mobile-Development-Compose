@@ -16,4 +16,7 @@ sealed class Screen(val route : String) {
             return "Scan_Result/${scanResponse.kelas}/${scanResponse.description}/${scanResponse.confidence}/$encodedImgUrl/$lat/$long"
         }
     }
+    object DetailPlant : Screen("Detail/{plantId}"){
+        fun createRoute(plantId : String) : String = "Detail/$plantId"
+    }
 }

@@ -31,6 +31,7 @@ import androidx.navigation.navArgument
 import com.example.compose.OrnamanComposeTheme
 import com.example.ornamancompose.ui.component.BottomNav
 import com.example.ornamancompose.ui.navigation.Screen
+import com.example.ornamancompose.ui.screen.DetailScreen
 import com.example.ornamancompose.ui.screen.HomeScreen
 import com.example.ornamancompose.ui.screen.LoginScreen
 import com.example.ornamancompose.ui.screen.ProfileScreen
@@ -91,7 +92,8 @@ fun OrnamanApp(
                 currentRoute != "auth_screen" &&
                 currentRoute != Screen.Login.route &&
                 currentRoute != Screen.Register.route &&
-                currentRoute != Screen.ScanResult.route
+                currentRoute != Screen.ScanResult.route &&
+                currentRoute != Screen.DetailPlant.route
             ){
                 BottomNav(
                     modifier = Modifier
@@ -128,7 +130,10 @@ fun OrnamanApp(
                     HomeScreen(
                         viewModel = homeViewModel,
                         modifier = Modifier
-                            .padding(innerPadding)
+                            .padding(innerPadding),
+                        onClickPlantCard = {plantId ->
+                            navController.navigate(Screen.DetailPlant.createRoute(plantId))
+                        }
                     )
                 }
                 composable(
@@ -162,6 +167,22 @@ fun OrnamanApp(
                         }
                     )
                 }
+
+                composable(
+                    route = Screen.DetailPlant.route,
+                    arguments = listOf(
+                        navArgument("plantId"){
+                            type = NavType.StringType
+                        }
+                    )
+                ){
+                    val plantId = it.arguments?.getString("plantId") ?: ""
+                    DetailScreen(
+                        plantId = plantId,
+                        viewModel = homeViewModel
+                    )
+                }
+
                 composable(
                     route = Screen.ScanResult.route,
                     arguments = listOf(
