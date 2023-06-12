@@ -12,7 +12,6 @@ import com.example.ornamancompose.model.datastore.User
 import com.example.ornamancompose.viewmodel.AuthViewModel
 import com.example.ornamancompose.viewmodel.ViewModelFactory
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 
 @SuppressLint("CustomSplashScreen")

@@ -1,6 +1,6 @@
 package com.example.ornamancompose.ui.navigation
 
-import PlantScanResponse
+import com.example.ornamancompose.model.remote.PlantScanResponse
 import com.example.ornamancompose.util.encodeStringUrl
 
 

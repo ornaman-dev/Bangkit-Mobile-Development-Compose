@@ -1,7 +1,7 @@
 package com.example.ornamancompose.viewmodel
 
-import PlantDetailResponse
-import PlantResponse
+import com.example.ornamancompose.model.remote.PlantDetailResponse
+import com.example.ornamancompose.model.remote.PlantResponse
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ornamancompose.repository.Repository
@@ -9,7 +9,6 @@ import com.example.ornamancompose.repository.UiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class HomeViewModel(private val repository: Repository) : ViewModel() {

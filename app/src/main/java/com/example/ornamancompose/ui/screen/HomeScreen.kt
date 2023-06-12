@@ -1,6 +1,6 @@
 package com.example.ornamancompose.ui.screen
 
-import PlantResponse
+import com.example.ornamancompose.model.remote.PlantResponse
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -168,39 +168,3 @@ fun ListPlantCard(
     }
 }
 
-//@Preview(showBackground = true, showSystemUi = true)
-//@Composable
-//fun HomeScreenPreview() {
-//    OrnamanComposeTheme {
-//        PlantColumn(
-//            modifier = Modifier
-//                .padding(start = 20.dp, end = 20.dp, top = 15.dp, bottom = 10.dp)
-//                .fillMaxSize()
-//        )
-//    }
-//}
-
-private val dummyData = listOf(
-    PlantResponse(
-        altName = "Agglonema",
-        desc = "Sample quick description Sample quick description Sample quick description Sample quick description",
-        imgUrl = "",
-        name = "Sample family name",
-        id = ""
-    ),
-
-    PlantResponse(
-        altName = "Agglonema",
-        desc = "Sample quick description Sample quick description Sample quick description Sample quick description",
-        imgUrl = "",
-        name = "Sample family name",
-        id = ""
-    ),
-    PlantResponse(
-        altName = "Agglonema",
-        desc = "Sample quick description Sample quick description Sample quick description Sample quick description",
-        imgUrl = "",
-        name = "Sample family name",
-        id = ""
-    )
-)

@@ -1,12 +1,12 @@
 package com.example.ornamancompose.repository
 
 
-import LoginResponse
-import PlantDetailResponse
-import PlantResponse
-import PlantScanResponse
-import RegisterResponse
-import ResultsItem
+import com.example.ornamancompose.model.remote.LoginResponse
+import com.example.ornamancompose.model.remote.PlantDetailResponse
+import com.example.ornamancompose.model.remote.PlantResponse
+import com.example.ornamancompose.model.remote.PlantScanResponse
+import com.example.ornamancompose.model.remote.RegisterResponse
+import com.example.ornamancompose.model.remote.ResultsItem
 import android.util.Log
 import com.example.ornamancompose.BuildConfig
 import com.example.ornamancompose.model.datastore.AuthPreferences

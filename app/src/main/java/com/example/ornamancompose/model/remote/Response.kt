@@ -1,3 +1,5 @@
+package com.example.ornamancompose.model.remote
+
 import com.google.gson.annotations.SerializedName
 
 data class LoginResponse(
@@ -38,15 +40,6 @@ data class PlantResponse(
 	@SerializedName("image")
 	val imgUrl : String,
 	val desc : String
-)
-
-data class DummyPlantResponse(
-	val title : String,
-	val quickDescription : String,
-	val publishedAt : String,
-	val publisher : String,
-	val imgUrl: String = "",
-	val profileImgUrl : String = ""
 )
 
 data class PlantScanResponse(

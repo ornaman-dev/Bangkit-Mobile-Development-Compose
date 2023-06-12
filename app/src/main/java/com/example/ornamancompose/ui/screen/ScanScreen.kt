@@ -1,6 +1,6 @@
 package com.example.ornamancompose.ui.screen
 
-import PlantScanResponse
+import com.example.ornamancompose.model.remote.PlantScanResponse
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
@@ -36,11 +36,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.compose.OrnamanComposeTheme
 import com.example.ornamancompose.R
 import com.example.ornamancompose.repository.UiState
 import com.example.ornamancompose.ui.component.IconCard
@@ -50,7 +47,6 @@ import com.example.ornamancompose.util.createCustomTempFile
 import com.example.ornamancompose.util.showToast
 import com.example.ornamancompose.util.uriToFile
 import com.example.ornamancompose.viewmodel.ScanViewModel
-import com.example.ornamancompose.viewmodel.ViewModelFactory
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionsRequired
 import com.google.accompanist.permissions.rememberMultiplePermissionsState

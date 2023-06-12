@@ -1,6 +1,5 @@
 package com.example.ornamancompose.ui.component
 
-import ResultsItem
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -10,14 +9,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -28,11 +24,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
 import com.example.ornamancompose.R
+import com.example.ornamancompose.model.remote.ResultsItem
 import com.example.ornamancompose.ui.theme.Poppins
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -133,20 +128,4 @@ private fun intentToGoogleMap(context : Context, data : ResultsItem){
     mapIntent.resolveActivity(context.packageManager)?.let{
         context.startActivity(mapIntent)
     }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Preview(showBackground = true)
-@Composable
-fun StoreCardPreview() {    
-//    Scaffold {paddingValues ->
-//        StoreCard(
-//            modifier = Modifier
-//                .padding(paddingValues),
-//            name = "Toko pupuk jaya baru",
-//            address = "Jl. Jati kenangan No. 25",
-//            isOpen = true,
-//            rating = "4.0"
-//        )
-//    }
 }

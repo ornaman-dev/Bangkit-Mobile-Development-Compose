@@ -1,15 +1,8 @@
 package com.example.ornamancompose.ui.screen
 
-import Geometry
-import Location
-import OpeningHours
-import PhotosItem
-import PlantScanResponse
-import ResultsItem
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -33,12 +26,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
-import com.example.compose.OrnamanComposeTheme
 import com.example.ornamancompose.R
+import com.example.ornamancompose.model.remote.PlantScanResponse
+import com.example.ornamancompose.model.remote.ResultsItem
 import com.example.ornamancompose.repository.UiState
 import com.example.ornamancompose.ui.component.ProgressBar
 import com.example.ornamancompose.ui.component.StoreCard
@@ -176,55 +168,4 @@ fun CardImage(
         )
     }
 }
-
-//@Preview(showBackground = true, showSystemUi = true)
-//@Composable
-//fun CardImagePrev() {
-//    OrnamanComposeTheme {
-//        ScanResultScreen(
-//            scanResult = PlantScanResponse("Anggrek","Lorem ipsum","90%", ""),
-//            lat = "",
-//            long = "",
-//            data = dummyResultsItem,
-//            modifier = Modifier
-//                .padding(10.dp)
-//                .fillMaxSize()
-//        )
-//    }
-//}
-
-val dummyResultsItem = listOf(
-    ResultsItem(
-        rating = "4.0",
-        photos = listOf(PhotosItem("")),
-        name = "Toko jaya baru",
-        vicinity = "Jl. Jati Kenangan No. 20",
-        geometry = Geometry(Location(2.0, 3.0)),
-        openingHours = OpeningHours(true)
-    ),
-    ResultsItem(
-        rating = "4.0",
-        photos = listOf(PhotosItem("")),
-        name = "Toko jaya baru",
-        vicinity = "Jl. Jati Kenangan No. 20",
-        geometry = Geometry(Location(2.0, 3.0)),
-        openingHours = OpeningHours(true)
-    ),
-    ResultsItem(
-        rating = "4.0",
-        photos = listOf(PhotosItem("")),
-        name = "Toko jaya baru",
-        vicinity = "Jl. Jati Kenangan No. 20",
-        geometry = Geometry(Location(2.0, 3.0)),
-        openingHours = OpeningHours(true)
-    ),
-    ResultsItem(
-        rating = "4.0",
-        photos = listOf(PhotosItem("")),
-        name = "Toko jaya baru",
-        vicinity = "Jl. Jati Kenangan No. 20",
-        geometry = Geometry(Location(2.0, 3.0)),
-        openingHours = OpeningHours(true)
-    )
-)
 

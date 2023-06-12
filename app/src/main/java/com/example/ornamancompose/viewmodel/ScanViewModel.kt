@@ -1,13 +1,12 @@
 package com.example.ornamancompose.viewmodel
 
-import PlantScanResponse
-import ResultsItem
+import com.example.ornamancompose.model.remote.PlantScanResponse
+import com.example.ornamancompose.model.remote.ResultsItem
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ornamancompose.repository.Repository
 import com.example.ornamancompose.repository.UiState
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch

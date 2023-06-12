@@ -1,6 +1,6 @@
 package com.example.ornamancompose
 
-import PlantScanResponse
+import com.example.ornamancompose.model.remote.PlantScanResponse
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity

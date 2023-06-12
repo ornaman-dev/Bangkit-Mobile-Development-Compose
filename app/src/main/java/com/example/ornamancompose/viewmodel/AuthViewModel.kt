@@ -1,21 +1,21 @@
 package com.example.ornamancompose.viewmodel
 
-import LoginResponse
-import RegisterResponse
+import com.example.ornamancompose.model.remote.LoginResponse
+import com.example.ornamancompose.model.remote.RegisterResponse
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.ornamancompose.model.remote.RegisterRequestBody
 import com.example.ornamancompose.repository.Repository
 import com.example.ornamancompose.repository.UiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collectIndexed
 import kotlinx.coroutines.launch
 
 class AuthViewModel(private val repository: Repository) : ViewModel() {
 
-    private val _mutableLoginStateFlow = MutableStateFlow<UiState<LoginResponse>>(UiState.Success(LoginResponse("")))
+    private val _mutableLoginStateFlow = MutableStateFlow<UiState<LoginResponse>>(UiState.Success(
+        LoginResponse("")
+    ))
     val loginStateFlow : StateFlow<UiState<LoginResponse>> get() = _mutableLoginStateFlow
 
     private val initialRegisterResponse = RegisterResponse(

@@ -1,11 +1,5 @@
 package com.example.ornamancompose.model.remote
 
-import LoginResponse
-import NearbySearchResponse
-import PlantDetailResponse
-import PlantResponse
-import PlantScanResponse
-import RegisterResponse
 import com.example.ornamancompose.BuildConfig
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
