@@ -18,7 +18,7 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-        buildConfigField("String", "BASE_API", "\"https://classification-api-rf6r3bwska-et.a.run.app/\"")
+        buildConfigField("String", "CLASSIFICATION_BASE_API", "\"https://classification-api-j52mutq7uq-as.a.run.app/\"")
         buildConfigField("String", "TEMP_BASE_API", "\"https://ornamanbackend-1-j5052767.deta.app/\"")
         buildConfigField("String", "PLANT_BASE_API", "\"https://c23-ps369.as.r.appspot.com/\"")
         buildConfigField("String", "GOOGLE_MAPS_BASE_API", "\"https://maps.googleapis.com/maps/api/place/\"")

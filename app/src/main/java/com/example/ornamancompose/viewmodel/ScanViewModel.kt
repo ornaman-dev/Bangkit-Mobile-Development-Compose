@@ -38,6 +38,11 @@ class ScanViewModel(private val repository: Repository) : ViewModel(){
         }
     }
 
+    fun resetProperties(){
+        _scanPlantState.value = UiState.Loading
+        _searchNearbyStoreState.value = UiState.Loading
+    }
+
     // Medan coordinate
     //"3.5955262740367937%2C98.66983043841861"
 }

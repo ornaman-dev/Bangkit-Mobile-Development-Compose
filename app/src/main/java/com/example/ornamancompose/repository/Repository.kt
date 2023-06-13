@@ -42,11 +42,7 @@ class Repository(
             val response = apiService.scanPlant(imageMultipart)
             val responseBody = response.body()
             if(response.isSuccessful && responseBody != null){
-                val confidence = responseBody.confidence * 100.0
-                val data = responseBody.copy(
-                    confidence = confidence
-                )
-                emit(UiState.Success(data))
+                emit(UiState.Success(responseBody))
             }else{
                 emit(UiState.Error(response.message(), response.code()))
             }

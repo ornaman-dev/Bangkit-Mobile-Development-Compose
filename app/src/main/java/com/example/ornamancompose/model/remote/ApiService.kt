@@ -62,7 +62,7 @@ class ApiConfig{
             .addInterceptor(loggingInterceptor)
             .build()
         private val retrofit = Retrofit.Builder()
-            .baseUrl(BuildConfig.BASE_API)
+            .baseUrl(BuildConfig.CLASSIFICATION_BASE_API)
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build()

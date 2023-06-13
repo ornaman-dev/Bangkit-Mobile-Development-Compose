@@ -1,8 +1,10 @@
 package com.example.ornamancompose.ui.screen
 
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -26,9 +28,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.example.compose.OrnamanComposeTheme
 import com.example.ornamancompose.R
+import com.example.ornamancompose.model.remote.Geometry
+import com.example.ornamancompose.model.remote.Location
 import com.example.ornamancompose.model.remote.PlantScanResponse
 import com.example.ornamancompose.model.remote.ResultsItem
 import com.example.ornamancompose.repository.UiState
@@ -43,16 +50,9 @@ fun ScanResultScreen(
     scanResult : PlantScanResponse,
     lat : String,
     long : String,
-    viewModel: ScanViewModel
+    viewModel: ScanViewModel,
+    navController: NavController
 ) {
-
-//    if(lat.isNotEmpty()){
-//        Log.i("ScanResult-TAG", "$scanResult")
-//        Log.i("ScanResult-TAG", lat)
-//        Log.i("ScanResult-TAG", long)
-//        return
-//    }
-
     val context = LocalContext.current
     val verticalScrollState = rememberScrollState()
     val nearbyStoreState by viewModel.searchNearbyStoreState.collectAsState()
@@ -79,8 +79,7 @@ fun ScanResultScreen(
             style = MaterialTheme.typography.bodySmall,
             modifier = Modifier
                 .padding(top = 15.dp)
-                .fillMaxWidth()
-                .weight(1f),
+                .fillMaxWidth(),
             textAlign = TextAlign.Center
         )
         Text(
@@ -113,11 +112,24 @@ fun ScanResultScreen(
                 Log.i("ScanResult-TAG", "${(nearbyStoreState as UiState.Success<List<ResultsItem>>).data}")
                 ListRecommendationStore(
                     modifier = Modifier
-                        .padding(top = 5.dp)
+                        .padding(top = 5.dp, bottom = 80.dp)
                         .fillMaxWidth(),
                     data = (nearbyStoreState as UiState.Success<List<ResultsItem>>).data
                 )
             }
+        }
+
+//        ListRecommendationStore(
+//            modifier = Modifier
+//                .padding(top = 5.dp, bottom = 80.dp)
+//                .fillMaxWidth(),
+//            data = dummyNearbyLocationData
+//        )
+
+        //Todo(clear scan state after the back system pressed)
+        BackHandler(true) {
+            viewModel.resetProperties()
+            navController.popBackStack()
         }
     }
 }
@@ -168,4 +180,33 @@ fun CardImage(
         )
     }
 }
+
+//@Preview(showBackground = true, showSystemUi = true)
+//@Composable
+//fun ScanResultPreview() {
+//    OrnamanComposeTheme {
+//        ScanResultScreen(
+//            scanResult = PlantScanResponse(
+//                "Anggrek",
+//                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+//                ""
+//            ),
+//            lat = "",
+//            long = "",
+//            modifier = Modifier
+//                .fillMaxSize()
+//        )
+//    }
+//}
+
+private val dummyNearbyLocationData = listOf(
+    ResultsItem(
+        rating = "4.0",
+        photos = emptyList(),
+        name = "Toko jaya baru",
+        openingHours = null,
+        geometry = Geometry(Location(0.0, 0.0)),
+        vicinity = "Jl. Anggrek kenangan"
+    )
+)
 

@@ -192,9 +192,6 @@ fun OrnamanApp(
                         navArgument("desc"){
                             type = NavType.StringType
                         },
-                        navArgument("conf"){
-                            type = NavType.StringType
-                        },
                         navArgument("imgUrl"){
                             type = NavType.StringType
                         },
@@ -208,7 +205,6 @@ fun OrnamanApp(
                 ){
                     val kelas = it.arguments?.getString("kelas") ?: ""
                     val desc = it.arguments?.getString("desc") ?: ""
-                    val conf = it.arguments?.getString("conf") ?: ""
                     val imgUrl = it.arguments?.getString("imgUrl") ?: ""
                     val lat = it.arguments?.getString("lat") ?: ""
                     val long = it.arguments?.getString("long") ?: ""
@@ -216,7 +212,6 @@ fun OrnamanApp(
                     val scanResult = PlantScanResponse(
                         kelas = kelas,
                         description = desc,
-                        confidence = conf.toDouble(),
                         imgUrl = decodeStringUrl(imgUrl),
                     )
                     ScanResultScreen(
@@ -226,7 +221,8 @@ fun OrnamanApp(
                         scanResult = scanResult,
                         lat = lat,
                         long = long,
-                        viewModel = scanViewModel
+                        viewModel = scanViewModel,
+                        navController = navController
                     )
                 }
             }
