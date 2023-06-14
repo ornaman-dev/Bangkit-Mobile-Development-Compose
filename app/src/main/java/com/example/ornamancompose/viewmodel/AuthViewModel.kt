@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 class AuthViewModel(private val repository: Repository) : ViewModel() {
 
     private val _mutableLoginStateFlow = MutableStateFlow<UiState<LoginResponse>>(UiState.Success(
-        LoginResponse("")
+        LoginResponse("", "", "", "")
     ))
     val loginStateFlow : StateFlow<UiState<LoginResponse>> get() = _mutableLoginStateFlow
 
@@ -26,6 +26,11 @@ class AuthViewModel(private val repository: Repository) : ViewModel() {
 
     private val _mutableRegisterStateFlow = MutableStateFlow<UiState<RegisterResponse>>(UiState.Success(initialRegisterResponse))
     val registerStateFlow : StateFlow<UiState<RegisterResponse>> get() = _mutableRegisterStateFlow
+
+    private val _mutableUserSessionStateFlow = MutableStateFlow<UiState<LoginResponse>>(
+        UiState.Success(LoginResponse("", "", "", ""))
+    )
+    val userSessionStateFlow : StateFlow<UiState<LoginResponse>> get() = _mutableUserSessionStateFlow
 
 
     fun login(email : String, password : String) = viewModelScope.launch {
@@ -48,7 +53,13 @@ class AuthViewModel(private val repository: Repository) : ViewModel() {
             }
     }
 
-    fun getUserSession() = repository.getUserSession()
+    fun getUserSession() = viewModelScope.launch {
+        repository.getUserSession().catch {cause ->
+            _mutableUserSessionStateFlow.value = UiState.Exception(cause.message.toString())
+        }.collect{ uiState ->
+            _mutableUserSessionStateFlow.value = UiState.Success(uiState)
+        }
+    }
     fun clearSession() = viewModelScope.launch {
         repository.clearSession()
     }

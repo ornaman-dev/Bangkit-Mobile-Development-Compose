@@ -6,38 +6,37 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.example.ornamancompose.model.remote.LoginResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-data class User(
-    val username : String,
-    val email : String,
-    val token : String
-)
 
 val Context.dataStore : DataStore<Preferences> by preferencesDataStore(name = "user")
 
 class AuthPreferences private constructor(private val dataStore : DataStore<Preferences>){
 
     private val TOKEN_KEY = stringPreferencesKey("token")
-    private val USERNAME_KEY = stringPreferencesKey("username")
+    private val NAME_KEY = stringPreferencesKey("name")
     private val EMAIL_KEY = stringPreferencesKey("email")
+    private val ID_KEY = stringPreferencesKey("id")
 
-    fun getUserSession() : Flow<User>{
+    fun getUserSession() : Flow<LoginResponse>{
         return dataStore.data.map { preference ->
-            User(
-                username = preference[USERNAME_KEY] ?: "",
+            LoginResponse(
+                name = preference[NAME_KEY] ?: "",
                 email = preference[EMAIL_KEY] ?: "",
-                token = preference[TOKEN_KEY] ?: ""
+                accessToken = preference[TOKEN_KEY] ?: "",
+                id = preference[ID_KEY] ?: ""
             )
         }
     }
 
-    suspend fun saveUser(user : User){
+    suspend fun saveUser(user : LoginResponse){
         dataStore.edit { preference ->
-            preference[TOKEN_KEY] = user.token
-            preference[USERNAME_KEY] = user.username
+            preference[TOKEN_KEY] = user.accessToken
+            preference[NAME_KEY] = user.name
             preference[EMAIL_KEY] = user.email
+            preference[ID_KEY] = user.id
         }
     }
 

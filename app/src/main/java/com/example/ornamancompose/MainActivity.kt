@@ -164,7 +164,8 @@ fun OrnamanApp(
                                     inclusive = true
                                 }
                             }
-                        }
+                        },
+                        viewModel = authViewModel
                     )
                 }
 

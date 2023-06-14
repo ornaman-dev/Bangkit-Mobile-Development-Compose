@@ -19,7 +19,7 @@ android {
             useSupportLibrary = true
         }
         buildConfigField("String", "CLASSIFICATION_BASE_API", "\"https://classification-api-j52mutq7uq-as.a.run.app/\"")
-        buildConfigField("String", "TEMP_BASE_API", "\"https://ornamanbackend-1-j5052767.deta.app/\"")
+        buildConfigField("String", "TEMP_BASE_API", "\"https://backend-dot-c23-ps369.as.r.appspot.com/\"")
         buildConfigField("String", "PLANT_BASE_API", "\"https://c23-ps369.as.r.appspot.com/\"")
         buildConfigField("String", "GOOGLE_MAPS_BASE_API", "\"https://maps.googleapis.com/maps/api/place/\"")
         buildConfigField("String", "GOOGLE_MAPS_API_KEY", "\"AIzaSyAKqVWjXx35lUj19dfPp4X0wKulyO2FVrY\"")

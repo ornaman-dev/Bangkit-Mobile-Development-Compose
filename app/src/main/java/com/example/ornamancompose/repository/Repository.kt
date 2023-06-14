@@ -10,7 +10,6 @@ import com.example.ornamancompose.model.remote.ResultsItem
 import android.util.Log
 import com.example.ornamancompose.BuildConfig
 import com.example.ornamancompose.model.datastore.AuthPreferences
-import com.example.ornamancompose.model.datastore.User
 import com.example.ornamancompose.model.remote.ApiService
 import com.example.ornamancompose.model.remote.RegisterRequestBody
 import kotlinx.coroutines.flow.Flow
@@ -28,7 +27,7 @@ class Repository(
     private val preference : AuthPreferences
 ) {
 
-    fun getUserSession() : Flow<User> = preference.getUserSession()
+    fun getUserSession() : Flow<LoginResponse> = preference.getUserSession()
     suspend fun clearSession() = preference.clearSession()
 
     fun scanPlant(file : File) : Flow<UiState<PlantScanResponse>> = flow {
@@ -68,10 +67,11 @@ class Repository(
             val responseBody = response.body()
             if(response.isSuccessful && responseBody != null){
                 preference.saveUser(
-                    User(
-                        username = "",
-                        email = "",
-                        token = responseBody.accessToken
+                    LoginResponse(
+                        name = responseBody.name,
+                        email = responseBody.email,
+                        accessToken = responseBody.accessToken,
+                        id = responseBody.id
                     )
                 )
                 emit(UiState.Success(responseBody))

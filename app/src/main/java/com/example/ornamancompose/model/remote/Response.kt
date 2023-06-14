@@ -3,8 +3,11 @@ package com.example.ornamancompose.model.remote
 import com.google.gson.annotations.SerializedName
 
 data class LoginResponse(
+	val id : String,
 	@SerializedName("access_token")
-	val accessToken : String
+	val accessToken : String,
+	val name : String,
+	val email : String
 )
 
 data class RegisterResponse(
