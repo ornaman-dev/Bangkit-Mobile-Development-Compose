@@ -159,10 +159,16 @@ fun OrnamanApp(
                             .fillMaxSize(),
                         onLogout = {
                             authViewModel.clearSession()
-                            navController.navigate("auth_screen"){
-                                popUpTo("home_screen"){
+                            //Todo(fix the routing)
+                            navController.navigate("auth_screen") {
+                                // Pop up to the auth graph, which includes the login screen
+                                popUpTo("auth_screen") {
+                                    // Include the login screen in the back stack
                                     inclusive = true
                                 }
+                                // Clear the back stack of the home graph
+                                launchSingleTop = true
+                                restoreState = true
                             }
                         },
                         viewModel = authViewModel

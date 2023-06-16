@@ -42,6 +42,11 @@ interface ApiService{
         @Body body : RegisterRequestBody
     ) : Response<RegisterResponse>
 
+    @POST("${BuildConfig.PLANT_BASE_API}likes")
+    suspend fun recommendPlants(
+        @Body body : PlantRecommendationRequest
+    ) : Response<List<PlantRecommendationResponse>>
+
     @GET("${BuildConfig.PLANT_BASE_API}plants")
     suspend fun getAllPlants() : Response<List<PlantResponse>>
 

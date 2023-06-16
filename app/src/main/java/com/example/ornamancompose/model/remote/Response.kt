@@ -2,6 +2,15 @@ package com.example.ornamancompose.model.remote
 
 import com.google.gson.annotations.SerializedName
 
+data class PlantRecommendationResponse(
+	val id : String,
+	@SerializedName("name_alt")
+	val altName : String,
+	@SerializedName("image")
+	val imgUrl : String,
+	val desc : String
+)
+
 data class LoginResponse(
 	val id : String,
 	@SerializedName("access_token")
@@ -11,10 +20,9 @@ data class LoginResponse(
 )
 
 data class RegisterResponse(
-	val username : String,
-	val email : String,
-	@SerializedName("is_active")
-	val isActive : Boolean
+	val id : String,
+	val name : String,
+	val email : String
 )
 
 data class PlantDetailResponse(

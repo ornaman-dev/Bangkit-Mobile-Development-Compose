@@ -19,9 +19,9 @@ class AuthViewModel(private val repository: Repository) : ViewModel() {
     val loginStateFlow : StateFlow<UiState<LoginResponse>> get() = _mutableLoginStateFlow
 
     private val initialRegisterResponse = RegisterResponse(
-        username = "",
+        name = "",
         email = "",
-        isActive = false
+        id = ""
     )
 
     private val _mutableRegisterStateFlow = MutableStateFlow<UiState<RegisterResponse>>(UiState.Success(initialRegisterResponse))
@@ -43,8 +43,8 @@ class AuthViewModel(private val repository: Repository) : ViewModel() {
         }
     }
 
-    fun register(username : String, email : String, password: String) = viewModelScope.launch {
-        repository.register(username, email, password)
+    fun register(name : String, email : String, password: String) = viewModelScope.launch {
+        repository.register(name, email, password)
             .catch {
                 _mutableRegisterStateFlow.value = UiState.Exception(it.message.toString())
             }

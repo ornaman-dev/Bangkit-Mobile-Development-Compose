@@ -1,10 +1,15 @@
 package com.example.ornamancompose.ui.screen
 
+import android.util.Log
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -14,6 +19,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
@@ -28,14 +36,21 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.compose.OrnamanComposeTheme
 import com.example.ornamancompose.R
+import com.example.ornamancompose.di.DependencyInjector
 import com.example.ornamancompose.model.remote.PlantDetailResponse
+import com.example.ornamancompose.model.remote.PlantRecommendationResponse
 import com.example.ornamancompose.repository.UiState
+import com.example.ornamancompose.ui.component.OutlinedPrimaryButton
+import com.example.ornamancompose.ui.component.PlantRecommendCard
 import com.example.ornamancompose.ui.component.ProgressBar
 import com.example.ornamancompose.ui.component.Treatment
 import com.example.ornamancompose.ui.component.TreatmentCard
 import com.example.ornamancompose.util.showToast
 import com.example.ornamancompose.util.styleStringResource
 import com.example.ornamancompose.viewmodel.HomeViewModel
+
+private lateinit var userId : String
+private val TAG = "DetalScreen-TAG"
 
 @Composable
 fun DetailScreen(
@@ -65,26 +80,87 @@ fun DetailScreen(
         }
         is UiState.Success -> {
             DetailPlant(
-                data = state.data
+                data = state.data,
+                viewModel = viewModel
             )
         }
+    }
+
+    val userSession by viewModel.userSessionStateFlow.collectAsState()
+
+    LaunchedEffect(Unit){
+        viewModel.getUserSession()
+    }
+    if(userSession is UiState.Success){
+        userId = (userSession as UiState.Success).data.id
     }
 }
 
 @Composable
 fun DetailPlant(
     modifier: Modifier = Modifier,
-    data : PlantDetailResponse
+    data : PlantDetailResponse,
+    viewModel: HomeViewModel
 ) {
 
     val treatments = convertTreatmentsToList(data)
+    var clicked by remember{
+        mutableStateOf(false)
+    }
     val scrollState = rememberScrollState()
+    val recommendState by viewModel.recommendPlants.collectAsState()
+    var recommendData : List<PlantRecommendationResponse> by remember {
+        mutableStateOf(emptyList())
+    }
+    val context = LocalContext.current
+    var isLoading by remember{
+        mutableStateOf(false)
+    }
+
+    LaunchedEffect(recommendState){
+        Log.i(TAG, "$recommendState")
+        when(val state = recommendState){
+            is UiState.Loading -> isLoading = true
+            is UiState.Error -> {
+                isLoading = false
+                showToast(context, state.message)
+            }
+            is UiState.Exception -> {
+                isLoading = false
+                showToast(context, state.message)
+            }
+            is UiState.Success -> {
+                if(state.data.isNotEmpty()){
+                    isLoading = false
+                    recommendData = state.data
+                    clicked = true
+                }
+            }
+        }
+    }
+
+
     Column(
         modifier = modifier
             .verticalScroll(scrollState)
             .padding(start = 15.dp, end = 15.dp, top = 10.dp, bottom = 60.dp)
             .fillMaxSize()
     ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.End
+        ) {
+            OutlinedPrimaryButton(
+                icon = painterResource(R.drawable.ic_favorite),
+                onClicked = {
+                    // Todo(call recommendation plant here)
+                    Log.i(TAG, "Outlined Button Clicked")
+                    viewModel.recommendPlants(userId, data.id)
+                },
+                clicked = clicked
+            )
+        }
         AsyncImage(
             model = data.imgUrl,
             placeholder = painterResource(R.drawable.placeholder_image),
@@ -115,11 +191,36 @@ fun DetailPlant(
                 .fillMaxWidth(),
             textAlign = TextAlign.Center
         )
+
+        if(isLoading){
+            ProgressBar()
+        }
+
+        if(recommendData.isNotEmpty()){
+            Log.i(TAG, "recommendData : $recommendData")
+            Log.i(TAG, "clickedStatus : $clicked")
+            Text(
+                text = stringResource(R.string.you_might_like),
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier
+                    .padding(vertical = 12.dp)
+            )
+            LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(15.dp)
+            ){
+                items(recommendData){ item ->
+                    PlantRecommendCard(
+                        data = item
+                    )
+                }
+            }
+        }
+
         Text(
             text = "Treatment",
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier
-                .padding(vertical = 15.dp)
+                .padding(vertical = 12.dp)
         )
         treatments.forEach{treatment ->
             TreatmentCard(
@@ -182,7 +283,35 @@ fun DetailPlantPreview() {
                 "Anthurium lebih suka cahaya terang yang tidak langsung. Sinar matahari langsung dapat membakar daunnya.",
                 "Anthurium lebih suka cahaya terang yang tidak langsung. Sinar matahari langsung dapat membakar daunnya.",
                 "Anthurium lebih suka cahaya terang yang tidak langsung. Sinar matahari langsung dapat membakar daunnya."
-            )
+            ),
+            viewModel = HomeViewModel(DependencyInjector.provideRepository(LocalContext.current))
         )
     }
 }
+
+private val dummyData = listOf(
+    PlantRecommendationResponse(
+        "",
+        "Anggrek",
+        "",
+        "Anggrek Anggrek Anggrek Anggrek Anggrek Anggrek Anggrek Anggrek Anggrek Anggrek Anggrek"
+    ),
+    PlantRecommendationResponse(
+        "",
+        "Anggrek",
+        "",
+        "Anggrek Anggrek Anggrek Anggrek Anggrek Anggrek Anggrek Anggrek Anggrek Anggrek Anggrek"
+    ),
+    PlantRecommendationResponse(
+        "",
+        "Anggrek",
+        "",
+        "Anggrek Anggrek Anggrek Anggrek Anggrek Anggrek Anggrek Anggrek Anggrek Anggrek Anggrek"
+    ),
+    PlantRecommendationResponse(
+        "",
+        "Anggrek",
+        "",
+        "Anggrek Anggrek Anggrek Anggrek Anggrek Anggrek Anggrek Anggrek Anggrek Anggrek Anggrek"
+    )
+)

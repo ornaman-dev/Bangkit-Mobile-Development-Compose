@@ -8,7 +8,7 @@
     <string name="action_take_a_picture">Ambil gambar</string>
     <string name="plant_name">Nama tanaman: <b>%s</b></string>
     <string name="confidence_prediction">Akurasi: %.3f%%</string>
-    <string name="username_placeholder">Nama Pengguna</string>
+    <string name="name_placeholder">Nama</string>
     <string name="password_placeholder">Kata Sandi</string>
     <string name="email_placeholder">Email</string>
     <string name="password_error_message">Kata sandi minimal 8 karakter</string>
@@ -39,4 +39,5 @@
     <string name="random_plant_fact">Tanaman terkecil di dunia adalah watermeal, dengan diameter hanya sebesar 0.1mm.</string>
     <string name="did_you_know">Apakah kamu tahu?</string>
     <string name="plant_guide">Panduan tanaman</string>
+    <string name="you_might_like">Anda mungkin juga suka</string>
 </resources>

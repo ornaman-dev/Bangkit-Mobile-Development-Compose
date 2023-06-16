@@ -7,7 +7,7 @@
     <string name="action_take_a_picture">Take a picture</string>
     <string name="plant_name">Plant name : <b>%s</b></string>
     <string name="confidence_prediction">Confidence : %.3f%%</string>
-    <string name="username_placeholder">Username</string>
+    <string name="name_placeholder">Name</string>
     <string name="password_placeholder">Password</string>
     <string name="email_placeholder">Email</string>
     <string name="password_error_message">Password must be at least 8 characters</string>
@@ -38,4 +38,5 @@
     <string name="random_plant_fact">The world\'s smallest flower is the watermeal, which measures just 0.1mm across.</string>
     <string name="did_you_know">Did you know?</string>
     <string name="plant_guide">Plant guide</string>
+    <string name="you_might_like">You might also like</string>
 </resources>

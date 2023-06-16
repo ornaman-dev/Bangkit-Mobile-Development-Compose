@@ -44,7 +44,7 @@ fun RegisterScreen(
     onSuccessRegister : () -> Unit = {}
 ) {
 
-    var username by remember{
+    var name by remember{
         mutableStateOf("")
     }
     var password by remember{
@@ -72,7 +72,7 @@ fun RegisterScreen(
                 showToast(context, state.message)
             }
             is UiState.Success -> {
-                if(state.data.username.isNotEmpty()){
+                if(state.data.name.isNotEmpty()){
                     onSuccessRegister()
                 }
             }
@@ -120,16 +120,16 @@ fun RegisterScreen(
                     .fillMaxWidth()
             )
             InputText(
-                placeholder = stringResource(R.string.username_placeholder),
+                placeholder = stringResource(R.string.name_placeholder),
                 onValueChanged = {newValue ->
-                    username = newValue
+                    name = newValue
                 },
-                text = username
+                text = name
             )
             InputText(
                 placeholder = stringResource(R.string.email_placeholder),
                 errorRule = {text ->
-                    !isEmailValid(text) && email.isNotEmpty()
+                    !isEmailValid(text.trim()) && email.isNotEmpty()
                 },
                 errorMessage = stringResource(R.string.email_error_message),
                 onValueChanged = {newValue ->
@@ -140,7 +140,7 @@ fun RegisterScreen(
             InputText(
                 placeholder = stringResource(R.string.password_placeholder),
                 errorRule = {text ->
-                    text.length < 8 && text.isNotEmpty()
+                    text.trim().length < 8 && text.isNotEmpty()
                 },
                 visualTransformation = PasswordVisualTransformation(),
                 errorMessage = stringResource(R.string.password_error_message),
@@ -160,8 +160,8 @@ fun RegisterScreen(
                     modifier = Modifier
                         .fillMaxWidth(),
                     onClick = {
-                        if(email.isNotEmpty() && username.isNotEmpty() && password.isNotEmpty()){
-                            viewModel.register(username.trim(), email.trim(), password.trim())
+                        if(email.isNotEmpty() && name.isNotEmpty() && password.isNotEmpty()){
+                            viewModel.register(name.trim(), email.trim(), password.trim())
                         }else{
                             showToast(context, context.getString(R.string.field_empty))
                         }

@@ -11,6 +11,8 @@ import android.util.Log
 import com.example.ornamancompose.BuildConfig
 import com.example.ornamancompose.model.datastore.AuthPreferences
 import com.example.ornamancompose.model.remote.ApiService
+import com.example.ornamancompose.model.remote.PlantRecommendationRequest
+import com.example.ornamancompose.model.remote.PlantRecommendationResponse
 import com.example.ornamancompose.model.remote.RegisterRequestBody
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -87,11 +89,11 @@ class Repository(
         }
     }
 
-    fun register(username : String, email: String, password: String) : Flow<UiState<RegisterResponse>> = flow{
+    fun register(name : String, email: String, password: String) : Flow<UiState<RegisterResponse>> = flow{
         emit(UiState.Loading)
         try{
             val body = RegisterRequestBody(
-                username = username,
+                name = name,
                 email = email,
                 password = password
             )
@@ -155,6 +157,24 @@ class Repository(
     fun getDetailPlant(id : String) : Flow<UiState<PlantDetailResponse>> = flow {
         try{
             val response = apiService.getDetailPlant(id)
+            val responseBody = response.body()
+            if(response.isSuccessful && responseBody != null){
+                emit(UiState.Success(responseBody))
+            }else{
+                emit(UiState.Error(response.message(), response.code()))
+            }
+        }catch (e :HttpException){
+            emit(UiState.Error(e.message(), e.code()))
+        }catch (e : Exception){
+            emit(UiState.Exception(e.message.toString()))
+        }
+    }
+
+    fun recommendPlants(userId : String, plantId : String) : Flow<UiState<List<PlantRecommendationResponse>>> = flow{
+        emit(UiState.Loading)
+        try{
+            val body = PlantRecommendationRequest(userId, plantId)
+            val response = apiService.recommendPlants(body)
             val responseBody = response.body()
             if(response.isSuccessful && responseBody != null){
                 emit(UiState.Success(responseBody))
